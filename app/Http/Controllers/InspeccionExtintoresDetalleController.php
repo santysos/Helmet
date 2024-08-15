@@ -68,7 +68,7 @@ class InspeccionExtintoresDetalleController extends Controller
                 'preguntas' => 'required|array',
                 'preguntas.*.respuesta' => 'required|in:si,no',
                 'preguntas.*.observaciones' => 'nullable|string',
-                'imagenes.*' => 'nullable|image|mimes:jpeg,png,JPG,jpg,gif,webp|max:6144', // Validar imágenes
+                'imagenes.*' => 'nullable|image|mimes:jpeg,png,JPG,jpg,gif,webp|max:2048', // Validar imágenes
             ]);
 
             $detalle = null;
@@ -92,8 +92,7 @@ class InspeccionExtintoresDetalleController extends Controller
                     // Leer la imagen desde el archivo usando el manager
                     $image = $manager->read($imagen->getPathname());
 
-                    // Redimensionar la imagen manteniendo la proporción sin exceder el tamaño original
-                    $image = $image->resizeDown(800, 600); // Redimensionar a 800x600, sin exceder el tamaño original
+                    $image->scale(height: 800); // 400 x 300
 
                     // Generar un nombre único para la imagen
                     $imageName = time() . '_' . uniqid() . '.jpg';

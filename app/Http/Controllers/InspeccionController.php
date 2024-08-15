@@ -7,23 +7,27 @@ use App\Models\Inspeccion;
 use App\Models\InspeccionDetalle;
 use App\Models\Empresa;
 use App\Models\User;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\GD\Driver;
+
+
 
 class InspeccionController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->input('search');
-    
+
         $inspecciones = Inspeccion::with('detalles', 'empresa', 'user')
             ->when($search, function ($query, $search) {
                 return $query->where('id', 'like', "%$search%")
-                             ->orWhereHas('empresa', function ($query) use ($search) {
-                                 $query->where('nombre', 'like', "%$search%");
-                             });
+                    ->orWhereHas('empresa', function ($query) use ($search) {
+                        $query->where('nombre', 'like', "%$search%");
+                    });
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-    
+
         return view('formatos.inspecciones.index', compact('inspecciones'));
     }
 
@@ -111,68 +115,69 @@ class InspeccionController extends Controller
 
 
     public function store(Request $request)
-{
-    // Depuración para ver toda la estructura del Request
-   // dd($request->all(), $request->file('photos'));
+    {
+        // Depuración para ver toda la estructura del Request
+        // dd($request->all(), $request->file('photos'));
 
-    $validatedData = $request->validate([
-        'empresa_id' => 'required|exists:empresas,id',
-        'user_id' => 'required|exists:users,id',
-        'area' => 'nullable|string|max:255',
-        'fecha_inspeccion' => 'nullable|date',
-        'responsable_inspeccion' => 'nullable|string|max:255',
-        'departamento' => 'nullable|string|max:255',
-        'responsable_area' => 'nullable|string|max:255',
-        'questions' => 'required|array',
-        'answers' => 'nullable|array',
-        'observations' => 'nullable|array',
-        'photos' => 'nullable|array',
-        'photos.*.*' => 'nullable|image|mimes:jpeg,webp,png,jpg,gif|max:2048', // Asegúrate de validar correctamente el array multidimensional
-    ], [
-        'empresa_id.required' => 'La empresa es obligatoria.',
-        'empresa_id.exists' => 'La empresa seleccionada no es válida.',
-        'user_id.required' => 'El usuario es obligatorio.',
-        'user_id.exists' => 'El usuario seleccionado no es válido.',
-        'questions.required' => 'Las preguntas son obligatorias.',
-        'photos.*.*.image' => 'Cada foto debe ser una imagen.', // Cambiado para validar correctamente el array multidimensional
-        'photos.*.*.mimes' => 'Cada foto debe ser un archivo de tipo: jpeg, png, jpg, gif.', // Cambiado para validar correctamente el array multidimensional
-        'photos.*.*.max' => 'Cada foto no debe ser mayor a 2048 kilobytes.', // Cambiado para validar correctamente el array multidimensional
-    ]);
+        $validatedData = $request->validate([
+            'empresa_id' => 'required|exists:empresas,id',
+            'user_id' => 'required|exists:users,id',
+            'area' => 'nullable|string|max:255',
+            'fecha_inspeccion' => 'nullable|date',
+            'responsable_inspeccion' => 'nullable|string|max:255',
+            'departamento' => 'nullable|string|max:255',
+            'responsable_area' => 'nullable|string|max:255',
+            'questions' => 'required|array',
+            'answers' => 'nullable|array',
+            'observations' => 'nullable|array',
+            'photos' => 'nullable|array',
+            'photos.*.*' => 'nullable|image|mimes:jpeg,webp,png,jpg,gif|max:2048', // Asegúrate de validar correctamente el array multidimensional
+        ], [
+            'empresa_id.required' => 'La empresa es obligatoria.',
+            'empresa_id.exists' => 'La empresa seleccionada no es válida.',
+            'user_id.required' => 'El usuario es obligatorio.',
+            'user_id.exists' => 'El usuario seleccionado no es válido.',
+            'questions.required' => 'Las preguntas son obligatorias.',
+            'photos.*.*.image' => 'Cada foto debe ser una imagen.', // Cambiado para validar correctamente el array multidimensional
+            'photos.*.*.mimes' => 'Cada foto debe ser un archivo de tipo: jpeg, png, jpg, gif.', // Cambiado para validar correctamente el array multidimensional
+            'photos.*.*.max' => 'Cada foto no debe ser mayor a 2048 kilobytes.', // Cambiado para validar correctamente el array multidimensional
+        ]);
 
-    try {
-        $inspeccion = Inspeccion::create($validatedData);
+        try {
+            $inspeccion = Inspeccion::create($validatedData);
 
-        foreach ($request->questions as $sectionIndex => $sectionQuestions) {
-            foreach ($sectionQuestions as $questionIndex => $question) {
-                $detalle = [
-                    'inspeccion_id' => $inspeccion->id,
-                    'pregunta' => $question,
-                    'respuesta' => isset($request->answers[$sectionIndex][$questionIndex]) && $request->answers[$sectionIndex][$questionIndex] == 'yes',
-                    'observaciones' => $request->observations[$sectionIndex][$questionIndex] ?? null,
-                ];
+            foreach ($request->questions as $sectionIndex => $sectionQuestions) {
+                foreach ($sectionQuestions as $questionIndex => $question) {
+                    $detalle = [
+                        'inspeccion_id' => $inspeccion->id,
+                        'pregunta' => $question,
+                        'respuesta' => isset($request->answers[$sectionIndex][$questionIndex]) && $request->answers[$sectionIndex][$questionIndex] == 'yes',
+                        'observaciones' => $request->observations[$sectionIndex][$questionIndex] ?? null,
+                    ];
 
-                if ($request->hasFile("photos.$sectionIndex.$questionIndex")) {
-                    $photo = $request->file("photos.$sectionIndex.$questionIndex");
-                    if ($photo->isValid()) {
-                        $photoPath = $photo->store('inspeccion_photos', 'public');
-                        $detalle['photo'] = $photoPath;
-                    } else {
-                        return redirect()->back()->withInput()->withErrors(['photos' => 'La foto no es válida.']);
+                    if ($request->hasFile("photos.$sectionIndex.$questionIndex")) {
+                        $photo = $request->file("photos.$sectionIndex.$questionIndex");
+                        if ($photo->isValid()) {
+                            $photoPath = $photo->store('inspeccion_photos', 'public');
+                            $detalle['photo'] = $photoPath;
+                        } else {
+                            return redirect()->back()->withInput()->withErrors(['photos' => 'La foto no es válida.']);
+                        }
                     }
+
+                    InspeccionDetalle::create($detalle);
                 }
-
-                InspeccionDetalle::create($detalle);
             }
+
+            return redirect()->route('inspecciones.index')->with('success', 'Inspección creada con éxito.');
+        } catch (\Exception $e) {
+            \Log::error('Error al crear la inspección: ' . $e->getMessage());
+            return redirect()->route('inspecciones.create')->withInput()->withErrors(['error' => 'Hubo un problema al crear la inspección: ' . $e->getMessage()]);
         }
-
-        return redirect()->route('inspecciones.index')->with('success', 'Inspección creada con éxito.');
-    } catch (\Exception $e) {
-        return redirect()->route('inspecciones.create')->withInput()->withErrors(['error' => 'Hubo un problema al crear la inspección: ' . $e->getMessage()]);
     }
-}
 
 
-    
+
 
 
     public function show($id)
@@ -208,7 +213,13 @@ class InspeccionController extends Controller
 
         $inspeccion = Inspeccion::findOrFail($id);
         $inspeccion->update($request->only([
-            'empresa_id', 'user_id', 'area', 'fecha_inspeccion', 'responsable_inspeccion', 'departamento', 'responsable_area'
+            'empresa_id',
+            'user_id',
+            'area',
+            'fecha_inspeccion',
+            'responsable_inspeccion',
+            'departamento',
+            'responsable_area'
         ]));
 
         $inspeccion->detalles()->delete();
