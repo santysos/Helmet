@@ -127,7 +127,7 @@ class InspeccionController extends Controller
         'answers' => 'nullable|array',
         'observations' => 'nullable|array',
         'photos' => 'nullable|array',
-        'photos.*.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar correctamente el array multidimensional
+        'photos.*.*' => 'nullable|image|mimes:jpeg,webp,png,jpg,gif|max:2048', // Asegúrate de validar correctamente el array multidimensional
     ], [
         'empresa_id.required' => 'La empresa es obligatoria.',
         'empresa_id.exists' => 'La empresa seleccionada no es válida.',
