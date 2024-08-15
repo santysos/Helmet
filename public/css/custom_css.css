@@ -1,0 +1,71 @@
+.select2-container .select2-selection--single {
+    height: 38px;
+}
+.select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+    top: 6px;
+}
+.select2-container--default .select2-selection--single {
+    border: 1px solid #ced4da;
+}
+
+.card-title {
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 8px !important;
+}
+
+
+.sidebar-dark-primary {
+    background-color: #001d33 !important;
+}
+
+[class*=sidebar-dark-] .sidebar a {
+    color: #ffffff;
+}
+
+.navbar-dark {
+    background-color: #f7f7f7;
+    border-color: #00B5E8;
+}
+
+[class*=sidebar-dark] .brand-link {
+    border-bottom: 1px solid #00B5E8;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #001d33;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #00B5E8;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #001d33;
+}
+
+
+[class*=sidebar-dark] .brand-link, [class*=sidebar-dark] .brand-link .pushmenu {
+    color: #ffffff;
+}
+
+
+/* Login */
+
+.login-page, .register-page {
+    
+    background-color: #001d33;
+    
+}
+
+.login-logo a, .register-logo a {
+    color: #fff;
+}
+
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item.menu-open > .nav-link, [class*="sidebar-dark-"] .nav-sidebar > .nav-item:hover > .nav-link, [class*="sidebar-dark-"] .nav-sidebar > .nav-item > .nav-link:focus {
+    background-color: rgba(7, 197, 255, 0.4);
+    color: #fff;
+  }
