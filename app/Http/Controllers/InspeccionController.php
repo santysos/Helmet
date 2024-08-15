@@ -167,7 +167,6 @@ class InspeccionController extends Controller
 
         return redirect()->route('inspecciones.index')->with('success', 'Inspección creada con éxito.');
     } catch (\Exception $e) {
-        Log::error('Error al crear la inspección: ' . $e->getMessage());
         return redirect()->route('inspecciones.create')->withInput()->withErrors(['error' => 'Hubo un problema al crear la inspección: ' . $e->getMessage()]);
     }
 }
