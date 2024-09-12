@@ -21,7 +21,7 @@ use App\Http\Controllers\InspeccionExtintoresDetalleController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
 Auth::routes();
