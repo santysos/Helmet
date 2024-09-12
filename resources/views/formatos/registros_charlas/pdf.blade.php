@@ -1,32 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles de la Charla</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body,
+        h1,
+        h2 {
+            font-family: 'Nunito Sans', sans-serif !important;
+            color: #333333;
         }
-        .table {
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            padding: 0px 0;
+        }
+
+        img {
+            width: 150px;
+        }
+
+        body {
+            padding-top: 80px;
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
         }
-        .table th, .table td {
-            border: 1px solid #000;
+
+        th,
+        td {
+            border: 1px solid black;
             padding: 8px;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.5;
         }
-        .table th {
+
+        th {
             background-color: #f2f2f2;
+            font-size: 13px;
         }
+
         .img-thumbnail {
             width: 100px;
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Detalles de la Charla</h1>
-    <table class="table">
+    <div class="header">
+        <img src="https://helmet.ergomas.ec/helmet-logo.webp" alt="Helmet Logo">
+    </div>
+    
+    <div>
+        <h1>Detalles de la Charla</h1>
+    </div>
+
+    <table class="table table-sm table-bordered">
         <tr>
             <th># Charla</th>
             <td>{{ $registroCharla->id }}</td>
@@ -77,8 +121,11 @@
         </tr>
     </table>
 
-    <h2>Participantes</h2>
-    <table class="table">
+    <div>
+        <h2>Participantes</h2>
+    </div>
+
+    <table class="table table-sm table-bordered">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -96,5 +143,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="footer">
+        <p>Reporte Generado el {{ now()->format('d/M/Y - H:i:s') }}</p>
+    </div>
 </body>
+
 </html>
