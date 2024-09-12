@@ -139,7 +139,7 @@ class InspeccionController extends Controller
             'user_id.exists' => 'El usuario seleccionado no es válido.',
             'questions.required' => 'Las preguntas son obligatorias.',
             'photos.*.*.image' => 'Cada foto debe ser una imagen.', // Cambiado para validar correctamente el array multidimensional
-            'photos.*.*.mimes' => 'Cada foto debe ser un archivo de tipo: jpeg, png, jpg, gif.', // Cambiado para validar correctamente el array multidimensional
+            'photos.*.*.mimes' => 'Cada foto debe ser un archivo de tipo: jpeg,webp , png, jpg, gif.', // Cambiado para validar correctamente el array multidimensional
             'photos.*.*.max' => 'Cada foto no debe ser mayor a 2048 kilobytes.', // Cambiado para validar correctamente el array multidimensional
         ]);
 
@@ -157,8 +157,21 @@ class InspeccionController extends Controller
 
                     if ($request->hasFile("photos.$sectionIndex.$questionIndex")) {
                         $photo = $request->file("photos.$sectionIndex.$questionIndex");
+        
+                        // Crear una instancia de ImageManager con el driver Imagick
+                        $manager = new ImageManager(new Driver());
                         if ($photo->isValid()) {
-                            $photoPath = $photo->store('inspeccion_photos', 'public');
+                            // Leer la imagen desde el archivo usando el manager
+                            $image = $manager->read($photo->getPathname());
+                            $image->scale(height: 800); // 400 x 300
+        
+                            // Generar un nombre único para la imagen
+                            $imageName = time() . '_' . uniqid() . '.jpg';
+                            $photoPath = 'inspeccion_photos/' . $imageName;
+        
+                            // Guardar la imagen redimensionada en el directorio de storage con una calidad del 75%
+                            $image->save(storage_path('app/public/' . $photoPath), quality: 75);
+        
                             $detalle['photo'] = $photoPath;
                         } else {
                             return redirect()->back()->withInput()->withErrors(['photos' => 'La foto no es válida.']);

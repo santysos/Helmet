@@ -17,22 +17,21 @@
     margin: 8px !important;
 }
 
-
 .sidebar-dark-primary {
     background-color: #001d33 !important;
 }
 
-[class*=sidebar-dark-] .sidebar a {
+[class*="sidebar-dark-"] .sidebar a {
     color: #ffffff;
 }
 
 .navbar-dark {
     background-color: #f7f7f7;
-    border-color: #00B5E8;
+    border-color: #00b5e8;
 }
 
-[class*=sidebar-dark] .brand-link {
-    border-bottom: 1px solid #00B5E8;
+[class*="sidebar-dark"] .brand-link {
+    border-bottom: 1px solid #00b5e8;
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -40,32 +39,40 @@
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
-    color: #00B5E8;
+    color: #00b5e8;
 }
 
 .navbar-dark .navbar-nav .nav-link.active {
     color: #001d33;
 }
 
-
-[class*=sidebar-dark] .brand-link, [class*=sidebar-dark] .brand-link .pushmenu {
+[class*="sidebar-dark"] .brand-link,
+[class*="sidebar-dark"] .brand-link .pushmenu {
     color: #ffffff;
 }
 
-
 /* Login */
 
-.login-page, .register-page {
-    
+.login-page,
+.register-page {
     background-color: #001d33;
-    
 }
 
-.login-logo a, .register-logo a {
+.login-logo a,
+.register-logo a {
     color: #fff;
 }
 
-[class*="sidebar-dark-"] .nav-sidebar > .nav-item.menu-open > .nav-link, [class*="sidebar-dark-"] .nav-sidebar > .nav-item:hover > .nav-link, [class*="sidebar-dark-"] .nav-sidebar > .nav-item > .nav-link:focus {
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item.menu-open > .nav-link,
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item:hover > .nav-link,
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item > .nav-link:focus {
     background-color: rgba(7, 197, 255, 0.4);
     color: #fff;
-  }
+}
+
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item > .nav-treeview {
+    background-color: #555555;
+}
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
+    color: #ffffff;
+}

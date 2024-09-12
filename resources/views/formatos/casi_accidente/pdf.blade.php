@@ -1,124 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte de Casi Accidente</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Nunito Sans', sans-serif !important;
+            color: #333333;
         }
-        .container {
+
+        .header {
+            position: fixed;
+            top: 0;
             width: 100%;
-            margin: 0 auto;
-        }
-        .header, .footer {
             text-align: center;
-            margin-bottom: 20px;
+            padding: 0px 0;
         }
-        .content {
-            margin-bottom: 20px;
+
+        img {
+            width: 150px;
         }
-        .content h2 {
-            margin-top: 0;
+
+        body {
+            padding-top: 80px;
         }
-        .content .section {
-            margin-bottom: 10px;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .section label {
-            font-weight: bold;
+
+        .table-datos-empresa th,
+        .table-datos-empresa td {
+            min-width: 50px;
+            max-width: 200px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 0.65;
+            vertical-align: middle;
         }
-        .photos img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 13px;
+        }
+
+        .image-container {
+            margin-top: 10px;
+        }
+
+        .image-container img {
+            max-width: 100px;
             margin-right: 10px;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Reporte de Casi Accidente</h1>
-        </div>
-        <div class="content">
-            <div class="section">
-                <label>Empresa:</label>
-                <p>{{ $nearAccidentReport->empresa->nombre }}</p>
-            </div>
-            <div class="section">
-                <label>Tipo de condición:</label>
-                <div>
-                    @foreach(json_decode($nearAccidentReport->condition_type) as $condition)
-                        <p>{{ $condition }}</p>
-                    @endforeach
-                </div>
-            </div>
-            <div class="section">
-                <label>Nivel de gravedad del casi accidente:</label>
-                <p>{{ $nearAccidentReport->severity_level }}</p>
-            </div>
-            <hr>
-            <div class="section">
-                <label>Nombres y Apellidos (Reportante):</label>
-                <p>{{ $nearAccidentReport->reporter_name }}</p>
-            </div>
-            <div class="section">
-                <label>Cargo (Reportante):</label>
-                <p>{{ $nearAccidentReport->reporter_position }}</p>
-            </div>
-            <div class="section">
-                <label>Área (Reportante):</label>
-                <p>{{ $nearAccidentReport->reporter_area }}</p>
-            </div>
-            <hr>
-            <div class="section">
-                <label>Nombres y Apellidos (Persona afectada):</label>
-                <p>{{ $nearAccidentReport->victim_name }}</p>
-            </div>
-            <div class="section">
-                <label>Cargo (Persona afectada):</label>
-                <p>{{ $nearAccidentReport->victim_position }}</p>
-            </div>
-            <div class="section">
-                <label>Lugar de trabajo (Persona afectada):</label>
-                <p>{{ $nearAccidentReport->victim_work_location }}</p>
-            </div>
-            <hr>
-            <div class="section">
-                <label>Descripción del casi accidente:</label>
-                <p>{{ $nearAccidentReport->description }}</p>
-            </div>
-            <div class="section">
-                <label>Fotografías adjuntas:</label>
-                <div class="photos">
-                    @if ($nearAccidentReport->photos)
-                        @foreach (json_decode($nearAccidentReport->photos) as $photo)
-                            <img src="{{ public_path('storage/' . $photo) }}" alt="Foto">
+    <div class="header">
+        <img src="https://helmet.ergomas.ec/helmet-logo.webp" alt="Helmet Logo">
+    </div>
+    <div>
+        <strong>Reporte de Casi Accidente</strong>
+    </div>
+    <table class="table table-sm table-bordered table-datos-empresa">
+        <tbody>
+            <tr>
+                <th colspan="3"> Reportante</th>
+            </tr>
+            <tr>
+                <td>{{ $nearAccidentReport->reporter_name }}</td>
+                <td>Cargo: {{ $nearAccidentReport->reporter_position }}</td>
+                <td>Area: {{ $nearAccidentReport->reporter_area }}</td>
+            </tr>
+            <tr>
+                <th><strong>Empresa:</strong></th>
+                <td colspan="2">{{ $nearAccidentReport->empresa->nombre }}</td>
+            </tr>
+            <tr>
+                <th colspan="3"> Persona Afectada</th>
+            </tr>
+            <tr>
+                <td>{{ $nearAccidentReport->victim_name }}</td>
+                <td>Cargo: {{ $nearAccidentReport->victim_position }}</td>
+                <td>Area: {{ $nearAccidentReport->victim_work_location }}</td>
+            </tr>
+
+            <tr>
+                <th colspan="3"> Descripción del casi accidente:</th>
+            </tr>
+            <tr>
+                <td colspan="3">{{ $nearAccidentReport->description }}</td>
+            </tr>
+
+            <tr>
+                <th colspan="3">Tipo de condición:</th>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <div class="d-flex align-items-center flex-wrap">
+                        @foreach(json_decode($nearAccidentReport->condition_type) as $condition)
+                        <div class="mr-2">
+                            {{ $condition }}
+                        </div>
                         @endforeach
-                    @endif
-                </div>
-            </div>
-            <hr>
-            <div class="section">
-                <label>Seguimiento (Nombres):</label>
-                <div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Nivel de gravedad del casi accidente:</strong></th>
+                <td colspan="2">{{ $nearAccidentReport->severity_level }}</td>
+            </tr>
+            <tr>
+                <th><strong>Seguimiento (Nombres):</strong></th>
+                <td colspan="2">
                     @foreach(json_decode($nearAccidentReport->follow_up_name) as $userId)
-                        <p>{{ App\Models\User::find($userId)->name }}</p>
+                    {{ App\Models\User::find($userId)->name }} - Email:
                     @endforeach
-                </div>
-            </div>
-            <div class="section">
-                <label>Correos de Seguimiento:</label>
-                <div>
                     @foreach(json_decode($nearAccidentReport->follow_up_email) as $email)
-                        <p>{{ $email }}</p>
+                    {{ $email }}<br>
                     @endforeach
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <p>Generado el {{ now()->format('d/m/Y') }}</p>
-        </div>
+                </td>
+
+            </tr>
+            <tr>
+                <th colspan="3">Fotografías adjuntas:</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div>
+                        @if ($nearAccidentReport->photos)
+                        @foreach (json_decode($nearAccidentReport->photos) as $photo)
+                        <img src="{{ public_path('storage/' . $photo) }}" alt="Foto" style="display: inline-block; margin-right: 10px; margin-top: 5px;">
+                        @endforeach
+                        @endif
+                    </div>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Reporte Generado el {{ now()->format('d/M/Y - H:i:s') }}</p>
     </div>
 </body>
+
 </html>
