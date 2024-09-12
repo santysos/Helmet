@@ -85,7 +85,7 @@
 
 @section('auth_footer')
 <div>
-    <a href="https://www.creativeweb.com.ec" target="_blank">Desarrollado por CreativeWeb ® 2024</a>
+    <a href="https://www.creativeweb.com.ec" target="_blank">Desarrollado por Creative 333Web ® 2024</a>
 </div>
 
    
