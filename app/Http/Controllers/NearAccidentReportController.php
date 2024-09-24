@@ -8,6 +8,8 @@ use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\GD\Driver;
 
 
 class NearAccidentReportController extends Controller
@@ -37,9 +39,11 @@ class NearAccidentReportController extends Controller
 
         return view('formatos.casi_accidente.create', compact('users', 'empresas'));
     }
-
+    
+    
     public function store(Request $request)
     {
+        // Validación de los datos del formulario
         $validated = $request->validate([
             'reporter_name' => 'required|string|max:255',
             'reporter_position' => 'required|string|max:255',
@@ -53,23 +57,43 @@ class NearAccidentReportController extends Controller
             'severity_level' => 'required|string',
             'photos.*' => 'nullable|image|mimes:jpeg,webp,png,jpg|max:2048',
             'follow_up_name' => 'required|array',
-            'follow_up_name.*' => 'exists:users,id', // Validar que los IDs existen en la tabla users
+            'follow_up_name.*' => 'exists:users,id',
             'empresa_id' => 'required|exists:empresas,id',
             'user_id' => 'required|exists:users,id',
         ]);
-
+    
         try {
+            // Procesar las imágenes, si están presentes
             $photos = [];
             if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $photo) {
-                    $path = $photo->store('near_accident_photos', 'public');
-                    $photos[] = $path;
+                    if ($photo->isValid()) {
+                        // Crear una instancia de ImageManager con el driver Imagick
+                        $manager = new ImageManager(new Driver());
+    
+                        // Leer la imagen desde el archivo usando el manager
+                        $image = $manager->read($photo->getPathname());
+    
+                        // Redimensionar la imagen a una altura de 800px, manteniendo la proporción
+                        $image->scale(height: 800);
+    
+                        // Generar un nombre único para la imagen
+                        $imageName = time() . '_' . uniqid() . '.jpg';
+                        $photoPath = 'near_accident_photos/' . $imageName;
+    
+                        // Guardar la imagen redimensionada en el directorio de storage (public) con calidad 75%
+                        $image->save(storage_path('app/public/' . $photoPath), 75);
+    
+                        // Almacenar la ruta de la imagen en el array de fotos
+                        $photos[] = $photoPath;
+                    }
                 }
             }
-
-            // Obtener los correos electrónicos de los usuarios seleccionados
+    
+            // Obtener los correos electrónicos de los usuarios seleccionados para seguimiento
             $followUpEmails = User::whereIn('id', $validated['follow_up_name'])->pluck('email')->toArray();
-
+    
+            // Crear el reporte en la base de datos
             NearAccidentReport::create([
                 'reporter_name' => $validated['reporter_name'],
                 'reporter_position' => $validated['reporter_position'],
@@ -80,21 +104,24 @@ class NearAccidentReportController extends Controller
                 'description' => $validated['description'],
                 'condition_type' => json_encode($validated['condition_type']),
                 'severity_level' => $validated['severity_level'],
-                'photos' => json_encode($photos),
+                'photos' => json_encode($photos), // Guardar las rutas de las fotos como JSON
                 'follow_up_name' => json_encode($validated['follow_up_name']),
                 'follow_up_email' => json_encode($followUpEmails), // Guardar los correos electrónicos como JSON
                 'empresa_id' => $validated['empresa_id'],
                 'user_id' => $validated['user_id'],
             ]);
-
+    
+            // Redireccionar con éxito
             return redirect()->route('casi_accidente.index')->with('success', 'Reporte enviado con éxito.');
         } catch (\Exception $e) {
+            // Registrar cualquier error en los logs
             Log::error('Error al crear el reporte de casi accidente: ' . $e->getMessage());
+    
+            // Redireccionar con error
             return redirect()->route('casi_accidente.create')->with('error', 'Hubo un error al enviar el reporte. Por favor, inténtelo de nuevo. ' . $e->getMessage());
         }
     }
-
-
+    
 
     public function show($id)
     {

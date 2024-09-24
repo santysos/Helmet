@@ -1,80 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles de la Inspección de Vehículo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Nunito Sans', sans-serif !important;
+            color: #333333;
         }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            padding: 0px 0;
+        }
+
+        img {
+            width: 150px;
+        }
+
+        body {
+            padding-top: 80px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
-        table, th, td {
+
+        .table-datos-empresa th,
+        .table-datos-empresa td {
+            min-width: 50px;
+            max-width: 200px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 0.65;
+            vertical-align: middle;
+        }
+
+        th,
+        td {
             border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
+            padding: 8px;
             text-align: left;
+            font-size: 12px;
+            line-height: 1.5;
         }
-        .card {
-            border: 1px solid #000;
-            margin-bottom: 20px;
-            padding: 15px;
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 13px;
         }
-        .card-header {
-            font-weight: bold;
-            margin-bottom: 10px;
+
+        .image-container {
+            margin-top: 10px;
         }
-        .card-body {
-            margin-bottom: 10px;
+
+        .image-container img {
+            max-width: 100px;
+            margin-right: 10px;
         }
     </style>
 </head>
-<body>
-    <h1>Detalles de la Inspección de Vehículo</h1>
 
-    <table>
-        <tr>
-            <th>Conductor</th>
-            <td>{{ $inspection->driver_name }}</td>
-        </tr>
-        <tr>
-            <th>Placa</th>
-            <td>{{ $inspection->plate }}</td>
-        </tr>
-        <tr>
-            <th>Número del Vehículo</th>
-            <td>{{ $inspection->vehicle_number }}</td>
-        </tr>
-        <tr>
-            <th>Fecha de Inspección</th>
-            <td>{{ $inspection->inspection_date }}</td>
-        </tr>
-        <tr>
-            <th>Supervisado Por</th>
-            <td>{{ $inspection->supervised_by }}</td>
-        </tr>
-        <tr>
-            <th>Observaciones Generales</th>
-            <td>{{ $inspection->observations_general }}</td>
-        </tr>
+<body>
+    <div class="header">
+        <img src="https://helmet.ergomas.ec/helmet-logo.webp" alt="Helmet Logo">
+    </div>
+    <div>
+        <strong>Detalles de la Inspección de Vehículo</strong>
+    </div>
+    <table class="table table-sm table-bordered table-datos-empresa">
+        <tbody>
+            <tr>
+                <th colspan="3"> Datos del Vehículo</th>
+            </tr>
+            <tr>
+                <td>Conductor: {{ $inspection->driver_name }}</td>
+                <td>Placa: {{ $inspection->plate }}</td>
+                <td>Número del Vehículo: {{ $inspection->vehicle_number }}</td>
+            </tr>
+            <tr>
+                <th><strong>Fecha de Inspección:</strong></th>
+                <td colspan="2">{{ $inspection->inspection_date }}</td>
+            </tr>
+            <tr>
+                <th><strong>Supervisado Por:</strong></th>
+                <td colspan="2">{{ $inspection->supervised_by }}</td>
+            </tr>
+            <tr>
+                <th colspan="3"> Observaciones Generales</th>
+            </tr>
+            <tr>
+                <td colspan="3">{{ $inspection->observations_general }}</td>
+            </tr>
+
+            <tr>
+                <th colspan="3"> Detalles de la Inspección</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    @foreach ($inspection->details as $detail)
+                    <div class="card">
+                        <div class="card-header">
+                            {{ $detail->question }}
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Respuesta:</strong> {{ $detail->answer ? 'Sí' : 'No' }}</p>
+                            <p><strong>Observaciones:</strong> {{ $detail->observations }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </td>
+            </tr>
+        </tbody>
     </table>
 
-    <h3>Detalles de la Inspección</h3>
-
-    @foreach ($inspection->details as $detail)
-        <div class="card">
-            <div class="card-header">
-                {{ $detail->question }}
-            </div>
-            <div class="card-body">
-                <strong>Respuesta:</strong> {{ $detail->answer ? 'Sí' : 'No' }}<br>
-                <strong>Observaciones:</strong> {{ $detail->observations }}
-            </div>
-        </div>
-    @endforeach
+    <div class="footer">
+        <p>Reporte Generado el {{ now()->format('d/M/Y - H:i:s') }}</p>
+    </div>
 </body>
+
 </html>

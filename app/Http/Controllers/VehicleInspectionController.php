@@ -10,6 +10,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\InspectionVehicleReportMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\VehicleInspectionImage;
 
 
 class VehicleInspectionController extends Controller
@@ -88,14 +89,15 @@ class VehicleInspectionController extends Controller
             'vehicle_number' => 'required|string|max:255',
             'inspection_date' => 'required|date',
             'supervised_by' => 'required|string|max:255',
+            'inspection_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validación para las imágenes
         ]);
-
+    
+        // Crear la inspección
         $inspection = VehicleInspection::create($request->only([
             'empresa_id', 'user_id', 'driver_name', 'plate', 'vehicle_number', 'inspection_date', 'supervised_by', 'observations_general'
         ]));
-
-
-
+    
+        // Guardar las respuestas de las preguntas
         foreach ($request->questions as $index => $question) {
             VehicleInspectionDetail::create([
                 'vehicle_inspection_id' => $inspection->id,
@@ -104,9 +106,23 @@ class VehicleInspectionController extends Controller
                 'observations' => $request->observations[$index] ?? null,
             ]);
         }
-
+    
+        // Guardar las imágenes si existen
+        if ($request->hasFile('inspection_images')) {
+            foreach ($request->file('inspection_images') as $image) {
+                $imagePath = $image->store('vehicle_inspections', 'public'); // Guardar la imagen en el disco 'public'
+    
+                // Crear una entrada en la tabla VehicleInspectionImage
+                VehicleInspectionImage::create([
+                    'vehicle_inspection_id' => $inspection->id,
+                    'image_path' => $imagePath,
+                ]);
+            }
+        }
+    
         return redirect()->route('vehiculos.index')->with('success', 'Formulario enviado con éxito');
     }
+    
 
     public function show($id)
     {

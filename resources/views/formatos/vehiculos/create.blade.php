@@ -54,7 +54,7 @@
                     <label for="vehicle_number">Número del Vehículo</label>
                     <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" value="{{ old('vehicle_number') }}" required>
                 </div>
-             
+
                 <div class="col-md-3">
                     <label for="supervised_by">Supervisado Por</label>
                     <input type="text" class="form-control" id="supervised_by" name="supervised_by" value="{{ old('supervised_by') }}" required>
@@ -89,6 +89,11 @@
                 <label for="observations_general">Observaciones Generales a Mejorar</label>
                 <textarea name="observations_general" class="form-control">{{ old('observations_general') }}</textarea>
             </div>
+            <div class="form-group">
+                <label for="inspection_images">Subir Imágenes de la Inspección</label>
+                <input type="file" name="inspection_images[]" id="inspection_images" class="form-control" multiple>
+            </div>
+
 
             <button type="submit" class="btn btn-success float-right">Guardar</button>
         </form>
