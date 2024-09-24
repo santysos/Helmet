@@ -86,7 +86,7 @@
     <table class="table table-sm table-bordered table-datos-empresa">
         <tbody>
             <tr>
-                <th colspan="3"> Reportante</th>
+                <th colspan="3"> Reportante:</th>
             </tr>
             <tr>
                 <td>{{ $nearAccidentReport->reporter_name }}</td>
