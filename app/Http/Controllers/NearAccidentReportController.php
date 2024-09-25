@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\GD\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 
 class NearAccidentReportController extends Controller
