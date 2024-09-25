@@ -112,7 +112,7 @@
             <td colspan="3">
                 @if ($registroCharla->fotos)
                 @foreach(json_decode($registroCharla->fotos) as $foto)
-                <img src="{{ public_path('storage/charlas/' . $foto) }}" alt="Foto" class="img-thumbnail">
+                <img src="{{ public_path('storage/' . $foto) }}" alt="Foto" class="img-thumbnail">
                 @endforeach
                 @else
                 No hay fotos
