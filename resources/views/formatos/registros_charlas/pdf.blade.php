@@ -67,7 +67,7 @@
     </div>
 
     <div>
-       <strong>Detalles de la Charla</strong> 
+        <strong>Detalles de la Charla</strong>
     </div>
 
     <table class="table table-sm table-bordered">
@@ -99,9 +99,9 @@
             <th>Tema Brindado</th>
             <td>
                 @foreach(json_decode($registroCharla->tema_brindado, true) as $temaId)
-                    @if(isset($temas[$temaId]))
-                        <span>{{ $temas[$temaId] }}</span><br>
-                    @endif
+                @if(isset($temas[$temaId]))
+                <span>{{ $temas[$temaId] }}</span><br>
+                @endif
                 @endforeach
             </td>
             <th>Temas Discutidos o Notas</th>
@@ -111,14 +111,15 @@
             <th>Fotos</th>
             <td colspan="3">
                 @if ($registroCharla->fotos)
-                    @foreach(json_decode($registroCharla->fotos) as $foto)
-                        <img src="{{ public_path('storage/charlas' . $foto) }}" alt="Foto" class="img-thumbnail">
-                    @endforeach
+                @foreach(json_decode($registroCharla->fotos) as $foto)
+                <img src="{{ public_path('storage/charlas/' . $foto) }}" alt="Foto" class="img-thumbnail">
+                @endforeach
                 @else
-                    No hay fotos
+                No hay fotos
                 @endif
             </td>
         </tr>
+
     </table>
 
     <div>
