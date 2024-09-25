@@ -63,9 +63,9 @@
 
 <body>
     <div class="header">
-    <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
+        <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
-    
+
     <div>
         <h1>Detalles de la Charla</h1>
     </div>
@@ -112,7 +112,7 @@
             <td colspan="3">
                 @if ($registroCharla->fotos)
                     @foreach(json_decode($registroCharla->fotos) as $foto)
-                        <img src="{{ $foto }}" alt="Foto" class="img-thumbnail">
+                        <img src="{{ public_path('storage/' . $foto) }}" alt="Foto" class="img-thumbnail">
                     @endforeach
                 @else
                     No hay fotos
