@@ -108,8 +108,16 @@
 document.getElementById('empresa_id').addEventListener('change', function () {
     var empresaId = this.value;
 
-    fetch(`/api/empresas/${empresaId}/trabajadores`)
-        .then(response => response.json())
+    // Generar la URL para obtener trabajadores
+    var trabajadoresUrl = `{{ url('/api/empresas') }}/${empresaId}/trabajadores`;
+
+    fetch(trabajadoresUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             var trabajadoresDiv = document.getElementById('trabajadores');
             trabajadoresDiv.innerHTML = '';
@@ -141,8 +149,16 @@ document.getElementById('empresa_id').addEventListener('change', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('/api/documentos/charlas_seguridad')
-        .then(response => response.json())
+    // Generar la URL para obtener documentos de charlas de seguridad
+    var documentosUrl = `{{ url('/api/documentos/charlas_seguridad') }}`;
+
+    fetch(documentosUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             var temaBrindadoSelect = document.getElementById('tema_brindado');
             data.forEach(function (documento) {
@@ -155,4 +171,5 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error:', error));
 });
 </script>
+
 @stop
