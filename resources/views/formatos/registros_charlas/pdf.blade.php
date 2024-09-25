@@ -86,6 +86,8 @@
     </div>
 
     <table class="table table-sm table-bordered table-datos-empresa">
+    <tbody>
+
         <tr>
             <th># Charla</th>
             <td>{{ $registroCharla->id }}</td>
@@ -133,7 +135,7 @@
 
             </td>
         </tr>
-
+    </tbody>
     </table>
 
     <div>
