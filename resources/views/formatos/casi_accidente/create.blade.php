@@ -154,9 +154,9 @@
         var empresaId = this.value;
 
         // Generar la URL de la API usando el nombre de la ruta de Laravel
-        var apiUrl = `{{ url('/api/empresas') }}/${empresaId}/trabajadores`;
+        var apiUrl = `{{ url('/api/empresas') }}/${empresaId}/usuarios`;
 
-        // Hacer una solicitud AJAX para obtener los trabajadores de la empresa seleccionada
+        // Hacer una solicitud AJAX para obtener los usuarios de la empresa seleccionada
         fetch(apiUrl)
             .then(response => {
                 if (!response.ok) {
@@ -166,17 +166,18 @@
             })
             .then(data => {
                 var followUpNameSelect = document.getElementById('follow_up_name');
-                followUpNameSelect.innerHTML = '<option value="" disabled>Seleccione uno o varios trabajadores</option>';
+                followUpNameSelect.innerHTML = '<option value="" disabled>Seleccione uno o varios usuarios</option>';
 
-                data.forEach(function(worker) {
+                data.forEach(function(user) {
                     var option = document.createElement('option');
-                    option.value = worker.id; // Asegúrate de que `id` sea la propiedad correcta
-                    option.textContent = worker.name; // Asegúrate de que `name` sea la propiedad correcta
+                    option.value = user.id; // Asegúrate de que `id` sea la propiedad correcta
+                    option.textContent = user.name; // Asegúrate de que `name` sea la propiedad correcta
                     followUpNameSelect.appendChild(option);
                 });
             })
             .catch(error => console.error('Error:', error));
     });
 </script>
+
 
 @stop
