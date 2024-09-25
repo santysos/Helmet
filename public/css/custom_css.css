@@ -76,3 +76,17 @@
 [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
     color: #ffffff;
 }
+
+
+.card-header.secciones {
+    background: #2b9aca;
+    color: #ffffff;
+}
+.card-body.secciones {
+    background: #f7f7f7;
+}
+
+h6, .h6 {
+    margin-bottom: 0; /* Establece el margen inferior de h6 a 0 */
+   
+}

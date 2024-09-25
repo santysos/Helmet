@@ -15,7 +15,7 @@
         Detalles de la Inspección
     </div>
     <div class="card-body">
-        <table class="table table-hover">
+        <table class="table table-sm table-hover">
             <tr>
                 <th># Inspección</th>
                 <td>{{ $inspeccion->id }}</td>
@@ -61,12 +61,12 @@
         @foreach ($sections as $sectionName => $detalles)
 
         <div class="card bg-light border-dark">
-            <div class="card-header">
-                <h6>{{ $sectionName }}</h6>
+            <div class="card-header secciones">
+                <h6><strong> {{ $sectionName }}</strong></h6>
             </div>
-            <div class="card-body">
+            <div class="card-body secciones">
 
-                <table class="table table-hover">
+                <table class="table table-sm table-hover">
                     <thead>
                         <tr>
                             <th>Pregunta</th>
