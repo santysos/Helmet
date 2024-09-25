@@ -154,11 +154,16 @@
         var empresaId = this.value;
 
         // Generar la URL de la API usando el nombre de la ruta de Laravel
-        var apiUrl = `{{ route('empresas.trabajadores', ['empresa' => '']) }}`.replace('=', empresaId);
+        var apiUrl = `{{ url('/api/empresas') }}/${empresaId}/trabajadores`;
 
         // Hacer una solicitud AJAX para obtener los trabajadores de la empresa seleccionada
         fetch(apiUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 var followUpNameSelect = document.getElementById('follow_up_name');
                 followUpNameSelect.innerHTML = '<option value="" disabled>Seleccione uno o varios trabajadores</option>';
