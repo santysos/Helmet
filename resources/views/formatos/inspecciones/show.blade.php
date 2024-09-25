@@ -62,7 +62,7 @@
 
         <div class="card bg-light border-dark">
             <div class="card-header">
-                <h4>{{ $sectionName }}</h5>
+                <h6>{{ $sectionName }}</h6>
             </div>
             <div class="card-body">
 
