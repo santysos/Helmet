@@ -46,7 +46,7 @@ class RegistroCharlaController extends Controller
         // Convertir las rutas de las fotos a rutas absolutas
         if ($registroCharla->fotos) {
             $fotos = array_map(function($foto) {
-                return public_path('storage/' . $foto);
+                return asset('storage/' . $foto);
             }, json_decode($registroCharla->fotos));
             $registroCharla->fotos = json_encode($fotos);
         }
