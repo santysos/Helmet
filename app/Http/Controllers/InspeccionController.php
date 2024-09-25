@@ -159,7 +159,7 @@ class InspeccionController extends Controller
                         $photo = $request->file("photos.$sectionIndex.$questionIndex");
         
                         // Crear una instancia de ImageManager con el driver Imagick
-                        $manager = new ImageManager(new Driver());
+                        $manager = new ImageManager(['driver' => 'gd']);    
                         if ($photo->isValid()) {
                             // Leer la imagen desde el archivo usando el manager
                             $image = $manager->read($photo->getPathname());
