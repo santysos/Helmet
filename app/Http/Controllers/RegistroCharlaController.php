@@ -13,27 +13,27 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class RegistroCharlaController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         $query = RegistroCharla::with('empresa');
-    
+
         if ($request->has('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('departamento', 'like', "%{$search}%")
-                  ->orWhere('responsable_charla', 'like', "%{$search}%")
-                  ->orWhereHas('empresa', function($q) use ($search) {
-                      $q->where('nombre', 'like', "%{$search}%");
-                  });
+                    ->orWhere('responsable_charla', 'like', "%{$search}%")
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('nombre', 'like', "%{$search}%");
+                    });
             });
         }
-    
+
         $registrosCharlas = $query->orderBy('created_at', 'desc')->paginate(10);
-    
+
         return view('formatos.registros_charlas.index', compact('registrosCharlas'));
     }
-    
+
 
     public function downloadPDF($id)
     {
@@ -43,17 +43,21 @@ class RegistroCharlaController extends Controller
         $temaIds = json_decode($registroCharla->tema_brindado, true);
         $temas = Document::whereIn('id', $temaIds)->pluck('file_path', 'id');
 
-        // Convertir las rutas de las fotos a rutas absolutas
+        // Limpiar y convertir las rutas de las fotos a rutas absolutas
         if ($registroCharla->fotos) {
-            $fotos = array_map(function($foto) {
-                return asset('storage/' . $foto);
-            }, json_decode($registroCharla->fotos));
+            // Remover el carácter escapado y limpiar las rutas
+            $fotos = array_map(function ($foto) {
+                return asset('storage/' . str_replace('\\/', '/', $foto));
+            }, json_decode($registroCharla->fotos, true));
+
+            // Actualizar el registro con las rutas corregidas
             $registroCharla->fotos = json_encode($fotos);
         }
 
         $pdf = PDF::loadView('formatos.registros_charlas.pdf', compact('registroCharla', 'temas'));
         return $pdf->download('detalle_charla.pdf');
     }
+
 
     public function create()
     {
@@ -120,11 +124,11 @@ class RegistroCharlaController extends Controller
     public function show($id)
     {
         $registroCharla = RegistroCharla::with('trabajadores')->findOrFail($id);
-        
+
         // Obtener los títulos de los documentos
         $temaIds = json_decode($registroCharla->tema_brindado, true);
         $temas = Document::whereIn('id', $temaIds)->pluck('file_path', 'id');
-        
+
         return view('formatos.registros_charlas.show', compact('registroCharla', 'temas'));
     }
     public function edit($id)
