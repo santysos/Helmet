@@ -8,7 +8,7 @@ use App\Models\InspeccionDetalle;
 use App\Models\Empresa;
 use App\Models\User;
 use Intervention\Image\ImageManager;
-use Intervention\Image\src\Drivers\GD\Driver;
+use Intervention\Image\Drivers\GD\Driver;
 
 
 
