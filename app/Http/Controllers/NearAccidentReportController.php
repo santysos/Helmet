@@ -69,8 +69,7 @@ class NearAccidentReportController extends Controller
                 foreach ($request->file('photos') as $photo) {
                     if ($photo->isValid()) {
                         // Crear una instancia de ImageManager con el driver Imagick
-                        $manager = new ImageManager(new Driver());
-    
+                        $manager = new ImageManager(['driver' => 'gd']);    
                         // Leer la imagen desde el archivo usando el manager
                         $image = $manager->read($photo->getPathname());
     
