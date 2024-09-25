@@ -78,7 +78,7 @@
 
 <body>
     <div class="header">
-        <img src="https://helmet.ergomas.ec/helmet-logo.webp" alt="Helmet Logo">
+    <img src="{{ asset('storage/images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
     <div>
         <strong>Detalles de la Inspección de Vehículo</strong>
