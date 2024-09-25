@@ -110,13 +110,12 @@
         <tr>
             <th>Fotos</th>
             <td colspan="3">
-                @if ($registroCharla->fotos)
+                @if($registroCharla->fotos)
                 @foreach(json_decode($registroCharla->fotos) as $foto)
-                <img src="{{ asset('storage/' . $foto) }}" alt="Fotos" class="img-thumbnail">
+                <img src="{{ $foto }}" alt="Foto de la charla" style="width: 100px; height: auto;">
                 @endforeach
-                @else
-                No hay fotos
                 @endif
+
             </td>
         </tr>
 

@@ -10,9 +10,6 @@ use App\Models\Document;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
-
-
-
 class RegistroCharlaController extends Controller
 {
 
@@ -47,15 +44,14 @@ class RegistroCharlaController extends Controller
 
         // Limpiar y convertir las rutas de las fotos a rutas absolutas
         if ($registroCharla->fotos) {
-            // Remover el carácter escapado y limpiar las rutas
+            // Convertir las rutas de fotos en URLs absolutas
             $fotos = array_map(function ($foto) {
-                return asset('storage/' . str_replace('\\/', '/', $foto));
+                return public_path('storage/' . str_replace('\\/', '/', $foto));
             }, json_decode($registroCharla->fotos, true));
-
-            // Actualizar el registro con las rutas corregidas
+        
             $registroCharla->fotos = json_encode($fotos);
         }
-
+        
         $pdf = PDF::loadView('formatos.registros_charlas.pdf', compact('registroCharla', 'temas'));
         return $pdf->download('detalle_charla.pdf');
     }
