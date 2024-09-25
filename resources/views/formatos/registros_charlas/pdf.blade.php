@@ -70,7 +70,7 @@
         <strong>Detalles de la Charla</strong>
     </div>
 
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered table-datos-empresa">
         <tr>
             <th># Charla</th>
             <td>{{ $registroCharla->id }}</td>
@@ -112,7 +112,7 @@
             <td colspan="3">
                 @if ($registroCharla->fotos)
                 @foreach(json_decode($registroCharla->fotos) as $foto)
-                <img src="{{ public_path('storage/' . $foto) }}" alt="Fotos" class="img-thumbnail">
+                <img src="{{ asset('storage/' . $foto) }}" alt="Foto" class="img-thumbnail">
                 @endforeach
                 @else
                 No hay fotos
