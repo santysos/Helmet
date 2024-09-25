@@ -10,7 +10,11 @@
     <style>
         body,
         h1,
-        h2 {
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: 'Nunito Sans', sans-serif !important;
             color: #333333;
         }
@@ -36,6 +40,17 @@
             border-collapse: collapse;
         }
 
+        .table-datos-empresa th,
+        .table-datos-empresa td {
+            min-width: 50px;
+            max-width: 200px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 0.65;
+            vertical-align: middle;
+        }
+
         th,
         td {
             border: 1px solid black;
@@ -50,13 +65,13 @@
             font-size: 13px;
         }
 
-        .img-thumbnail {
-            width: 100px;
+        .image-container {
+            margin-top: 10px;
         }
 
-        .footer {
-            margin-top: 20px;
-            text-align: center;
+        .image-container img {
+            max-width: 100px;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -122,7 +137,7 @@
     </table>
 
     <div>
-        <h2>Participantes</h2>
+        <strong>Participantes</strong>
     </div>
 
     <table class="table table-sm table-bordered">
@@ -138,7 +153,7 @@
             <tr>
                 <td>{{ $trabajador->nombre }}</td>
                 <td>{{ $trabajador->apellido }}</td>
-                <td>{{ $trabajador->firma ? 'Sí' : 'No' }}</td>
+                <td></td>
             </tr>
             @endforeach
         </tbody>
