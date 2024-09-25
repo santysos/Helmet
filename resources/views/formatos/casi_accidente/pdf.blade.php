@@ -78,7 +78,7 @@
 
 <body>
     <div class="header">
-    <img src="{{ asset('storage/images/helmet-logo.webp') }}" alt="Helmet Logo">
+        <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
     <div>
         <strong>Reporte de Casi Accidente</strong>
