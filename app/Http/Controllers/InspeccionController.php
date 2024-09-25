@@ -8,7 +8,7 @@ use App\Models\InspeccionDetalle;
 use App\Models\Empresa;
 use App\Models\User;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\GD\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 
 
@@ -159,7 +159,7 @@ class InspeccionController extends Controller
                         $photo = $request->file("photos.$sectionIndex.$questionIndex");
         
                         // Crear una instancia de ImageManager con el driver Imagick
-                        $manager = new ImageManager(['driver' => 'gd']);    
+                        $manager = new ImageManager(new Driver());
                         if ($photo->isValid()) {
                             // Leer la imagen desde el archivo usando el manager
                             $image = $manager->read($photo->getPathname());
