@@ -34,7 +34,7 @@ class InspeccionExtintores extends Model
     // Relación muchos a muchos con Extintores a través de la tabla pivote inspeccion_extintor
     public function extintores()
     {
-        return $this->belongsToMany(Extintor::class, 'inspeccion_extintor', 'inspeccion_id', 'extintor_id')
+        return $this->belongsToMany(Extintor::class, 'inspeccion_extintores', 'id', 'id')
             ->withTimestamps();
     }
 

@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\InspeccionExtintores;
 use App\Models\InspeccionExtintoresImagen;
-
 use App\Models\Empresa;
 use App\Models\Extintor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use PDF;
 use App\Mail\InspeccionExtintoresMail;
+use App\Models\InspeccionExtintoresDetalle;
 use Illuminate\Support\Facades\Mail;
 
 class InspeccionExtintoresController extends Controller
 {
     public function index()
     {
-        $inspecciones = InspeccionExtintores::with('empresa')->orderBy('id','desc')->get();
+        $inspecciones = InspeccionExtintores::with('empresa')->orderBy('id', 'desc')->get();
         return view('formatos.inspecciones_extintores.index', compact('inspecciones'));
     }
 
@@ -140,37 +140,50 @@ class InspeccionExtintoresController extends Controller
 
 
 
-
     public function edit($id)
     {
-        $inspeccion = InspeccionExtintores::with(['extintores'])->findOrFail($id);
+        // Cargar la inspección junto con los extintores y sus detalles
+        $inspeccion = InspeccionExtintores::with(['empresa', 'extintores', 'detalles'])->findOrFail($id);
         $empresas = Empresa::all();
-        $extintores = Extintor::all();
+
+        // Los extintores ya estarán cargados en la relación
+       // $extintores = InspeccionExtintoresDetalle::with(['extintor_id'])->where('inspeccion_extintor_id','=',$id)->get();
+       $extintores = $inspeccion->detalles->pluck('extintor')->unique('id');
+
+
+
         return view('formatos.inspecciones_extintores.edit', compact('inspeccion', 'empresas', 'extintores'));
     }
 
+
+
+
     public function update(Request $request, $id)
     {
+        // Validación de los datos de entrada
         $data = $request->validate([
             'empresa_id' => 'required|exists:empresas,id',
             'area' => 'required|string|max:255',
-            'fecha_inspeccion' => 'required|date_format:d/m/Y',
+            'fecha_inspeccion' => 'required|date',
             'responsable_inspeccion' => 'required|string|max:255',
             'departamento' => 'required|string|max:255',
             'comentarios' => 'nullable|string',
             'riesgos_recomendaciones' => 'nullable|string',
-            'extintores' => 'required|array',
-            'extintores.*' => 'exists:extintores,id',
+            'extintores' => 'array|required', // Validar que al menos un extintor sea seleccionado
+            'extintores.*' => 'exists:extintores,id', // Validar que los extintores existan
         ]);
 
-        // Convertir la fecha del formato d/m/Y a Y-m-d
-        $data['fecha_inspeccion'] = Carbon::createFromFormat('d/m/Y', $data['fecha_inspeccion'])->format('Y-m-d');
+        // Convertir la fecha al formato correcto
+        $data['fecha_inspeccion'] = Carbon::parse($data['fecha_inspeccion'])->format('Y-m-d');
 
+        // Buscar la inspección existente y actualizarla
         $inspeccion = InspeccionExtintores::findOrFail($id);
         $inspeccion->update($data);
+
+        // Actualizar los extintores asociados
         $inspeccion->extintores()->sync($data['extintores']);
 
-        return redirect()->route('inspecciones_extintores.show', $id)->with('success', 'Inspección actualizada exitosamente.');
+        return redirect()->route('inspecciones_extintores.show', $inspeccion->id)->with('success', 'Inspección actualizada exitosamente.');
     }
 
     public function destroy($id)
