@@ -10,7 +10,7 @@ use App\Models\Extintor;
 use Illuminate\Http\Request;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\GD\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 
 
