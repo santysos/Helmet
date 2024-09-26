@@ -17,19 +17,30 @@ class InspeccionController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $user = auth()->user(); // Obtener el usuario autenticado
 
+
+        // Obtener las inspecciones con los detalles y las relaciones de empresa y usuario
         $inspecciones = Inspeccion::with('detalles', 'empresa', 'user')
             ->when($search, function ($query, $search) {
                 return $query->where('id', 'like', "%$search%")
                     ->orWhereHas('empresa', function ($query) use ($search) {
                         $query->where('nombre', 'like', "%$search%");
                     });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            });
 
+        // Si el usuario es Admin Empresa, filtrar por la empresa a la que pertenece
+        if ($user->hasRole('Admin Empresa')) {
+            $inspecciones->where('empresa_id', $user->empresa_id); // Filtrar por empresa_id del usuario
+        }
+
+        // Ordenar por fecha de creación y paginar los resultados
+        $inspecciones = $inspecciones->orderBy('created_at', 'desc')->paginate(10);
+
+        // Devolver la vista con las inspecciones filtradas
         return view('formatos.inspecciones.index', compact('inspecciones'));
     }
+
 
     public function create()
     {
@@ -157,21 +168,21 @@ class InspeccionController extends Controller
 
                     if ($request->hasFile("photos.$sectionIndex.$questionIndex")) {
                         $photo = $request->file("photos.$sectionIndex.$questionIndex");
-        
+
                         // Crear una instancia de ImageManager con el driver Imagick
                         $manager = new ImageManager(new Driver());
                         if ($photo->isValid()) {
                             // Leer la imagen desde el archivo usando el manager
                             $image = $manager->read($photo->getPathname());
                             $image->scale(height: 800); // 400 x 300
-        
+
                             // Generar un nombre único para la imagen
                             $imageName = time() . '_' . uniqid() . '.jpg';
                             $photoPath = 'inspeccion_photos/' . $imageName;
-        
+
                             // Guardar la imagen redimensionada en el directorio de storage con una calidad del 75%
                             $image->save(storage_path('app/public/' . $photoPath), quality: 75);
-        
+
                             $detalle['photo'] = $photoPath;
                         } else {
                             return redirect()->back()->withInput()->withErrors(['photos' => 'La foto no es válida.']);
