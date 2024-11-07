@@ -12,6 +12,8 @@ use PDF;
 use App\Mail\InspeccionExtintoresMail;
 use App\Models\InspeccionExtintoresDetalle;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
 
 class InspeccionExtintoresController extends Controller
 {
@@ -73,7 +75,7 @@ class InspeccionExtintoresController extends Controller
             return redirect()->route('inspecciones_extintores.show', $inspeccion->id)->with('success', 'Inspección creada exitosamente.');
         } catch (\Exception $e) {
             // Loggear el error
-            \Log::error("Error al crear inspección: " . $e->getMessage());
+            Log::error("Error al crear inspección: " . $e->getMessage());
 
             // Redirigir con mensaje de error
             return redirect()->back()->withErrors('Error al crear la inspección: ' . $e->getMessage())->withInput();

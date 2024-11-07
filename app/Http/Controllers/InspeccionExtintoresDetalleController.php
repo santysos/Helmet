@@ -11,10 +11,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
-
-
-
-
+use Illuminate\Support\Facades\Log;
 
 class InspeccionExtintoresDetalleController extends Controller
 {
@@ -113,13 +110,10 @@ class InspeccionExtintoresDetalleController extends Controller
 
             return redirect()->route('inspecciones_extintores.show', $inspeccionId)->with('success', 'Detalle añadido correctamente');
         } catch (\Exception $e) {
-            \Log::error("Error al guardar detalles de inspección: " . $e->getMessage());
+            Log::error("Error al guardar detalles de inspección: " . $e->getMessage());
             return redirect()->back()->withErrors('Error al guardar el detalle de la inspección: ' . $e->getMessage())->withInput();
         }
     }
-
-
-
 
 
 
@@ -130,27 +124,68 @@ class InspeccionExtintoresDetalleController extends Controller
         return view('inspecciones_extintores_detalles.show', compact('detalle'));
     }
 
-    // Método para editar una inspección detallada
-    public function edit($id)
+    public function edit($extintor_id, $inspeccion_id)
     {
-        $detalle = InspeccionExtintoresDetalle::findOrFail($id);
-        return view('inspecciones_extintores_detalles.edit', compact('detalle'));
+        // Obtener los detalles de la inspección para el extintor específico
+        $detalles = InspeccionExtintoresDetalle::where('extintor_id', $extintor_id)
+            ->where('inspeccion_extintor_id', $inspeccion_id)
+            ->get();
+
+      //  dd($detalles);
+
+        // Obtener la lista de extintores de la empresa
+        $extintores = Extintor::where('empresa_id', $detalles[0]->inspeccionExtintor->empresa_id)->get();
+
+        // Pasar los detalles y los extintores a la vista
+        return view('formatos.inspecciones_extintores_detalles.edit', compact('detalles', 'extintores', 'inspeccion_id'));
     }
 
-    // Método para actualizar los detalles de una inspección
+
     public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'pregunta' => 'required|string',
-            'respuesta' => 'required|in:si,no',
-            'observaciones' => 'nullable|string',
-        ]);
+{
+    // Validar los datos de entrada
+    $request->validate([
+        'extintor_id' => 'required|exists:extintores,id',
+        'preguntas' => 'required|array',
+        'preguntas.*.respuesta' => 'required|string|in:si,no',
+        'preguntas.*.observaciones' => 'nullable|string',
+        'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-        $detalle = InspeccionExtintoresDetalle::findOrFail($id);
-        $detalle->update($data);
+    // Buscar el detalle de inspección por ID
+    $detalle = InspeccionExtintoresDetalle::findOrFail($id);
 
-        return redirect()->route('inspecciones.index')->with('success', 'Detalle de inspección actualizado exitosamente.');
+    // Actualizar el extintor_id y las preguntas
+    $detalle->extintor_id = $request->input('extintor_id');
+
+    // Aquí actualizamos las preguntas y sus respuestas
+    foreach ($request->input('preguntas') as $index => $pregunta) {
+        $detalle->pregunta = $pregunta['texto'];
+        $detalle->respuesta = $pregunta['respuesta'];
+        $detalle->observaciones = $pregunta['observaciones'] ?? null;
     }
+
+    // Guardar los cambios
+    $detalle->save();
+
+    // Si hay imágenes, manejarlas
+    if ($request->hasFile('imagenes')) {
+        foreach ($request->file('imagenes') as $imagen) {
+            // Subir la imagen
+            $nombreArchivo = time() . '_' . $imagen->getClientOriginalName();
+            $rutaImagen = $imagen->storeAs('inspecciones_extintores', $nombreArchivo, 'public');
+
+            // Aquí puedes guardar la ruta en una tabla si lo deseas
+            // Ejemplo: $detalle->imagenes()->create(['ruta' => $rutaImagen]);
+        }
+    }
+
+    // Redirigir con un mensaje de éxito
+    return redirect()->route('inspecciones_extintores_detalles.edit', ['id' => $detalle->id])
+                     ->with('success', 'Detalle de inspección actualizado correctamente.');
+}
+
+
 
     // Método para eliminar una inspección detallada
     public function destroy($id)

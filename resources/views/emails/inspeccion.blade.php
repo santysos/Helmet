@@ -4,7 +4,7 @@
 
 A continuación podrá obtener mas detalles sobre la inspección realizada, descargue el PDF adjunto o visualice la inspección en el botón “ver inspección”.
 
-@component('mail::button', ['url' => url('/inspecciones/'.$inspeccion->id)])
+@component('mail::button', ['url' => url('/inspecciones_extintores/'.$inspeccion->id)])
 Ver Inspección
 @endcomponent
 

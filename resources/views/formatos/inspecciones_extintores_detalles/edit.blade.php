@@ -1,10 +1,10 @@
 @extends('adminlte::page')
 
-@section('title', 'Editar Inspección de Extintores')
+@section('title', 'Editar Detalle de Inspección de Extintores')
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Editar Inspección de Extintores</h5>
+    <h5>Editar Detalle de Inspección</h5>
     <a href="{{ route('inspecciones_extintores.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>
 </div>
 @stop
@@ -12,61 +12,88 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Editar Inspección de Extintores
+        Editar Detalle de Inspección de Extintores
     </div>
     <div class="card-body">
-        <form action="{{ route('inspecciones_extintores.update', $inspeccion->id) }}" method="POST">
-            @csrf
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+
+        <form action="{{ route('inspecciones_extintores_detalles.update', ['id' => $detalles[0]->id]) }}" method="POST" enctype="multipart/form-data">
+        @csrf
             @method('PUT')
             <div class="form-group">
                 <input type="hidden" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
+                <input type="hidden" name="inspeccion_extintor_id" value="{{ $inspeccion_id }}">
             </div>
             <div class="form-group row">
                 <div class="col-md-4">
-                    <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled>Seleccione una empresa</option>
-                        @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}" {{ $inspeccion->empresa_id == $empresa->id ? 'selected' : '' }}>{{ $empresa->nombre }}</option>
+                    <label for="extintor_id">Extintor</label>
+                    <select class="form-control @error('extintor_id') is-invalid @enderror" id="extintor_id" name="extintor_id" required>
+                        <option value="" disabled>Seleccione un extintor</option>
+                        @foreach($extintores as $extintor)
+                        <option value="{{ $extintor->id }}" {{ $detalles[0]->extintor_id == $extintor->id ? 'selected' : '' }}>
+                            {{ $extintor->codigo }} - {{ $extintor->area }}
+                        </option>
                         @endforeach
                     </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="area">Área</label>
-                    <input type="text" class="form-control" id="area" name="area" value="{{ old('area', $inspeccion->area) }}" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="fecha_inspeccion">Fecha de la Inspección</label>
-                    <input type="date" class="form-control" id="fecha_inspeccion" name="fecha_inspeccion" value="{{ old('fecha_inspeccion', $inspeccion->fecha_inspeccion) }}" required>
+                    @error('extintor_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-md-4">
-                    <label for="responsable_inspeccion">Responsable de la Inspección</label>
-                    <input type="text" class="form-control" id="responsable_inspeccion" name="responsable_inspeccion" value="{{ old('responsable_inspeccion', $inspeccion->responsable_inspeccion) }}" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="departamento">Departamento</label>
-                    <input type="text" class="form-control" id="departamento" name="departamento" value="{{ old('departamento', $inspeccion->departamento) }}" required>
+
+            @foreach ($detalles as $index => $detalle)
+            <div class="col-md-12">
+                <div class="card card-outline card-primary collapsed-card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ $detalle->pregunta }}</h3>
+                        <div class="card-tools">
+                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                <input type="hidden" name="preguntas[{{ $index }}][respuesta]" value="no">
+                                <input type="checkbox" class="custom-control-input @error('preguntas.'.$index.'.respuesta') is-invalid @enderror" id="customSwitch{{ $index }}" name="preguntas[{{ $index }}][respuesta]" value="si" {{ $detalle->respuesta == 'si' ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="customSwitch{{ $index }}"></label>
+                            </div>
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" name="preguntas[{{ $index }}][texto]" value="{{ $detalle->pregunta }}">
+                        <label>Observaciones:</label>
+                        <textarea name="preguntas[{{ $index }}][observaciones]" class="form-control @error('preguntas.'.$index.'.observaciones') is-invalid @enderror">{{ old("preguntas.{$index}.observaciones", $detalle->observaciones) }}</textarea>
+                        @error('preguntas.'.$index.'.observaciones')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
             </div>
+            @endforeach
+
             <div class="form-group">
-                <label for="comentarios_notas_adicionales">Comentarios y Notas Adicionales</label>
-                <textarea class="form-control" id="comentarios_notas_adicionales" name="comentarios_notas_adicionales">{{ old('comentarios_notas_adicionales', $inspeccion->comentarios_notas_adicionales) }}</textarea>
+                <label for="imagenes">Imágenes de la Inspección (puede seleccionar varias)</label>
+                <input type="file" name="imagenes[]" id="imagenes" class="form-control @error('imagenes.*') is-invalid @enderror" multiple accept="image/*" capture="camera">
+                @error('imagenes.*')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
             </div>
-            <div class="form-group">
-                <label for="riesgos_significativos_recomendaciones">Riegos Significativos y Recomendaciones Técnicas en el Área</label>
-                <textarea class="form-control" id="riesgos_significativos_recomendaciones" name="riesgos_significativos_recomendaciones">{{ old('riesgos_significativos_recomendaciones', $inspeccion->riesgos_significativos_recomendaciones) }}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="extintores">Extintores</label>
-                <select class="form-control" id="extintores" name="extintores[]" multiple>
-                    @foreach($extintores as $extintor)
-                    <option value="{{ $extintor->id }}" {{ in_array($extintor->id, $inspeccion->extintores->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="submit" class="btn btn-success float-right">Guardar</button>
+
+            <button type="submit" class="btn btn-success float-right">Actualizar</button>
         </form>
     </div>
 </div>
@@ -78,16 +105,14 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
 @if(session('success'))
 <script>
-    toastr.success("{!! Session::get('success') !!}")
+    toastr.success("{!! Session::get('success') !!}");
 </script>
 @endif
-
 @if(session('error'))
 <script>
-    toastr.error("{!! Session::get('error') !!}")
+    toastr.error("{!! Session::get('error') !!}");
 </script>
 @endif
 @stop

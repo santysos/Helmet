@@ -60,12 +60,29 @@
             </div>
             <div class="form-group">
                 <label for="extintores">Extintores</label>
-                <select class="form-control" id="extintores" name="extintores[]" multiple>
-                    @foreach($extintores as $extintor)
-                    <option value="{{ $extintor->id }}" {{ in_array($extintor->id, $inspeccion->extintores->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}</option>
-                    @endforeach
-                </select>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Extintor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($extintores as $extintor)
+                        <tr>
+                            <td>{{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}</td>
+                            <td>
+                                <a href="{{ route('inspecciones_extintores_detalles.edit', ['extintor_id' => $extintor->id, 'inspeccion_id' => $inspeccion->id]) }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+
             <button type="submit" class="btn btn-success float-right">Guardar</button>
         </form>
     </div>
