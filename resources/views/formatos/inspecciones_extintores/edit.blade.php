@@ -72,11 +72,14 @@
                         <tr>
                             <td>{{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}</td>
                             <td>
-                                <a href="{{ route('inspecciones_extintores_detalles.edit', ['extintor_id' => $extintor->id, 'inspeccion_id' => $inspeccion->id]) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                             </td>
+
+
                         </tr>
                         @endforeach
                     </tbody>

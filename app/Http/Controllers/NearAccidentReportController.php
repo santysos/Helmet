@@ -34,10 +34,24 @@ class NearAccidentReportController extends Controller
     public function create()
     {
         $empresas = Empresa::where('id', '!=', 0)->get();
-        $users = User::all();
+        $user = auth()->user();
 
+        // Si el usuario tiene el rol SuperAdmin o Admin Helmet
+        if ($user->hasRole(['SuperAdmin', 'Admin Helmet'])) {
+            $empresas = Empresa::all(); // Cargar todas las empresas
+            $empresaSeleccionada = null; // No preseleccionada
+            $seleccionable = true; // El select será editable
+        }
+        // Si el usuario tiene el rol Admin Empresa
+        elseif ($user->hasRole('Admin Empresa')) {
+            $empresas = Empresa::where('id', $user->empresa_id)->get(); // Solo su empresa
+            $empresaSeleccionada = $user->empresa_id; // Empresa preseleccionada
+            $seleccionable = false; // El select será no editable
+        } else {
+            abort(403, 'No tienes permisos para realizar esta acción.'); // Control de acceso
+        }
 
-        return view('formatos.casi_accidente.create', compact('users', 'empresas'));
+        return view('formatos.casi_accidente.create', compact('user', 'empresas','empresaSeleccionada','seleccionable'));
     }
     
     

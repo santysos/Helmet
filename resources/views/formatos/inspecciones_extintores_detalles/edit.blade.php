@@ -16,19 +16,19 @@
     </div>
     <div class="card-body">
         @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
 
 
         <form action="{{ route('inspecciones_extintores_detalles.update', ['id' => $detalles[0]->id]) }}" method="POST" enctype="multipart/form-data">
-        @csrf
+            @csrf
             @method('PUT')
             <div class="form-group">
                 <input type="hidden" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
@@ -37,7 +37,7 @@
             <div class="form-group row">
                 <div class="col-md-4">
                     <label for="extintor_id">Extintor</label>
-                    <select class="form-control @error('extintor_id') is-invalid @enderror" id="extintor_id" name="extintor_id" required>
+                    <select class="form-control @error('extintor_id') is-invalid @enderror" id="extintor_id" name="extintor_id_disabled" disabled required>
                         <option value="" disabled>Seleccione un extintor</option>
                         @foreach($extintores as $extintor)
                         <option value="{{ $extintor->id }}" {{ $detalles[0]->extintor_id == $extintor->id ? 'selected' : '' }}>
@@ -45,13 +45,18 @@
                         </option>
                         @endforeach
                     </select>
+
+                    <!-- Campo oculto para enviar el valor de extintor_id -->
+                    <input type="hidden" name="extintor_id" value="{{ $detalles[0]->extintor_id }}">
+
                     @error('extintor_id')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
             </div>
+
 
             @foreach ($detalles as $index => $detalle)
             <div class="col-md-12">
@@ -74,9 +79,9 @@
                         <label>Observaciones:</label>
                         <textarea name="preguntas[{{ $index }}][observaciones]" class="form-control @error('preguntas.'.$index.'.observaciones') is-invalid @enderror">{{ old("preguntas.{$index}.observaciones", $detalle->observaciones) }}</textarea>
                         @error('preguntas.'.$index.'.observaciones')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @enderror
                     </div>
                 </div>
@@ -87,9 +92,9 @@
                 <label for="imagenes">Imágenes de la Inspección (puede seleccionar varias)</label>
                 <input type="file" name="imagenes[]" id="imagenes" class="form-control @error('imagenes.*') is-invalid @enderror" multiple accept="image/*" capture="camera">
                 @error('imagenes.*')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
                 @enderror
             </div>
 

@@ -12,8 +12,17 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Inspecciones de Extintores
-    </div>
+    <div class="d-flex justify-content-between align-items-center">
+            <h3 class="card-title">Listado de Inspecciones de Extintores</h3>
+            <form action="{{ route('inspecciones_extintores.index') }}" method="GET" class="form-inline">
+            <div class="input-group input-group-sm">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
+                    <span class="input-group-append">
+                        <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                    </span>
+                </div>
+            </form>
+        </div>    </div>
     <div class="card-body">
         <table class="table table-bordered">
             <thead>

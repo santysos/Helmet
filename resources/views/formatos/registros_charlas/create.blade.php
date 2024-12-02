@@ -23,13 +23,30 @@
             <div class="form-group row">
                 <div class="col-md-4">
                     <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled selected>Seleccione una empresa</option>
+                    <select
+                        class="form-control"
+                        id="empresa_id"
+                        name="empresa_id"
+                        required
+                        {{ !$seleccionable ? 'disabled' : '' }}> <!-- Deshabilitar si no es editable -->
+
+                        <option value="" disabled {{ !isset($empresaSeleccionada) ? 'selected' : '' }}>Seleccione una empresa</option>
+
                         @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}">{{ $empresa->nombre }}</option>
+                        <option
+                            value="{{ $empresa->id }}"
+                            {{ (old('empresa_id') == $empresa->id || (isset($empresaSeleccionada) && $empresaSeleccionada == $empresa->id)) ? 'selected' : '' }}>
+                            {{ $empresa->nombre }}
+                        </option>
                         @endforeach
                     </select>
+
+                    @if(!$seleccionable)
+                    <!-- Campo oculto para enviar el valor si el select está deshabilitado -->
+                    <input type="hidden" name="empresa_id" value="{{ $empresaSeleccionada }}">
+                    @endif
                 </div>
+
                 <div class="col-md-4">
                     <label for="departamento">Departamento</label>
                     <input type="text" class="form-control" id="departamento" name="departamento" value="{{ old('departamento') }}" required>
@@ -103,73 +120,86 @@
     toastr.error("{!! Session::get('error') !!}")
 </script>
 @endif
-
 <script>
-document.getElementById('empresa_id').addEventListener('change', function () {
-    var empresaId = this.value;
+    document.addEventListener('DOMContentLoaded', function () {
+        var empresaId = document.getElementById('empresa_id').value;
 
-    // Generar la URL para obtener trabajadores
-    var trabajadoresUrl = `{{ url('/api/empresas') }}/${empresaId}/trabajadores`;
+        if (empresaId) { // Ejecutar si ya se conoce la empresa
+            cargarTrabajadores(empresaId);
+        }
 
-    fetch(trabajadoresUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            var trabajadoresDiv = document.getElementById('trabajadores');
-            trabajadoresDiv.innerHTML = '';
+        // Añadir el evento change para los demás casos
+        document.getElementById('empresa_id').addEventListener('change', function () {
+            var nuevaEmpresaId = this.value;
+            cargarTrabajadores(nuevaEmpresaId);
+        });
 
-            data.forEach(function(trabajador) {
-                var div = document.createElement('div');
-                div.className = 'form-check';
+        // Cargar temas brindados al cargar la página
+        cargarTemasBrindados();
+    });
 
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.className = 'form-check-input';
-                checkbox.id = 'trabajador' + trabajador.id;
-                checkbox.name = 'trabajadores[]';
-                checkbox.value = trabajador.id;
+    function cargarTrabajadores(empresaId) {
+        // Generar la URL para obtener trabajadores
+        var trabajadoresUrl = `{{ url('/api/empresas') }}/${empresaId}/trabajadores`;
 
-                var label = document.createElement('label');
-                label.className = 'form-check-label';
-                label.htmlFor = 'trabajador' + trabajador.id;
-                label.textContent = `${trabajador.nombre} ${trabajador.apellido}`;
+        fetch(trabajadoresUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var trabajadoresDiv = document.getElementById('trabajadores');
+                trabajadoresDiv.innerHTML = '';
 
-                div.appendChild(checkbox);
-                div.appendChild(label);
+                data.forEach(function (trabajador) {
+                    var div = document.createElement('div');
+                    div.className = 'form-check';
 
-                trabajadoresDiv.appendChild(div);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-});
+                    var checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'form-check-input';
+                    checkbox.id = 'trabajador' + trabajador.id;
+                    checkbox.name = 'trabajadores[]';
+                    checkbox.value = trabajador.id;
 
+                    var label = document.createElement('label');
+                    label.className = 'form-check-label';
+                    label.htmlFor = 'trabajador' + trabajador.id;
+                    label.textContent = `${trabajador.nombre} ${trabajador.apellido}`;
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Generar la URL para obtener documentos de charlas de seguridad
-    var documentosUrl = `{{ url('/api/documentos/charlas_seguridad') }}`;
+                    div.appendChild(checkbox);
+                    div.appendChild(label);
 
-    fetch(documentosUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            var temaBrindadoSelect = document.getElementById('tema_brindado');
-            data.forEach(function (documento) {
-                var option = document.createElement('option');
-                option.value = documento.id;
-                option.textContent = documento.nombre;
-                temaBrindadoSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-});
+                    trabajadoresDiv.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function cargarTemasBrindados() {
+        var documentosUrl = `{{ url('/api/documentos/charlas_seguridad') }}`;
+
+        fetch(documentosUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var temaBrindadoSelect = document.getElementById('tema_brindado');
+                data.forEach(function (documento) {
+                    var option = document.createElement('option');
+                    option.value = documento.id;
+                    option.textContent = documento.nombre;
+                    temaBrindadoSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
 </script>
+
 
 @stop

@@ -21,7 +21,7 @@ class Empresa extends Model
     protected $casts = [
         'emails' => 'array', // Cast de emails como array
     ];
-    
+
     public function trabajadores()
     {
         return $this->hasMany(Trabajador::class);
@@ -33,5 +33,9 @@ class Empresa extends Model
     public function registrosCharlas()
     {
         return $this->hasMany(RegistroCharla::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

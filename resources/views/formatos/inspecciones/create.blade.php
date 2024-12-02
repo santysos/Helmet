@@ -23,13 +23,29 @@
             <div class="form-group row">
                 <div class="col-md-4">
                     <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled selected>Seleccione una empresa</option>
+                    <select
+                        class="form-control"
+                        id="empresa_id"
+                        name="empresa_id"
+                        required
+                        {{ !$seleccionable ? 'disabled' : '' }}> <!-- Si no es seleccionable, deshabilitar -->
+
+                        <option value="" disabled {{ !isset($empresaSeleccionada) ? 'selected' : '' }}>Seleccione una empresa</option>
+
                         @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}" {{ old('empresa_id') == $empresa->id ? 'selected' : '' }}>{{ $empresa->nombre }}</option>
+                        <option value="{{ $empresa->id }}"
+                            {{ (old('empresa_id') == $empresa->id || (isset($empresaSeleccionada) && $empresaSeleccionada == $empresa->id)) ? 'selected' : '' }}>
+                            {{ $empresa->nombre }}
+                        </option>
                         @endforeach
                     </select>
+
+                    @if(!$seleccionable)
+                    <!-- Campo oculto para enviar el valor seleccionado en caso de estar deshabilitado -->
+                    <input type="hidden" name="empresa_id" value="{{ $empresaSeleccionada }}">
+                    @endif
                 </div>
+
                 <div class="col-md-4">
                     <label for="area">Área</label>
                     <input type="text" class="form-control" id="area" name="area" value="{{ old('area') }}" required>

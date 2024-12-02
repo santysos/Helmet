@@ -23,10 +23,13 @@
             <div class="form-group row">
                 <div class="col-md-4">
                     <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled selected>Seleccione una empresa</option>
+                    <select class="form-control" id="empresa_id" name="empresa_id" required {{ $seleccionable ? '' : 'disabled' }}>
+                        <option value="" disabled {{ !$empresaSeleccionada ? 'selected' : '' }}>Seleccione una empresa</option>
                         @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}" {{ old('empresa_id') == $empresa->id ? 'selected' : '' }}>{{ $empresa->nombre }}</option>
+                        <option value="{{ $empresa->id }}"
+                            {{ old('empresa_id', $empresaSeleccionada) == $empresa->id ? 'selected' : '' }}>
+                            {{ $empresa->nombre }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -57,7 +60,7 @@
                 <label for="riesgos_recomendaciones">Riegos Significativos y Recomendaciones Técnicas en el Área</label>
                 <textarea class="form-control" id="riesgos_recomendaciones" name="riesgos_recomendaciones">{{ old('riesgos_recomendaciones') }}</textarea>
             </div>
-        
+
             <button type="submit" class="btn btn-success float-right">Guardar</button>
         </form>
     </div>

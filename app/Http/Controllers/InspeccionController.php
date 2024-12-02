@@ -44,8 +44,23 @@ class InspeccionController extends Controller
 
     public function create()
     {
-        $empresas = Empresa::all();
-        $users = User::all();
+        $user = auth()->user();
+
+        // Si el usuario tiene el rol SuperAdmin o Admin Helmet
+        if ($user->hasRole(['SuperAdmin', 'Admin Helmet'])) {
+            $empresas = Empresa::all(); // Cargar todas las empresas
+            $empresaSeleccionada = null; // No preseleccionada
+            $seleccionable = true; // El select será editable
+        }
+        // Si el usuario tiene el rol Admin Empresa
+        elseif ($user->hasRole('Admin Empresa')) {
+            $empresas = Empresa::where('id', $user->empresa_id)->get(); // Solo su empresa
+            $empresaSeleccionada = $user->empresa_id; // Empresa preseleccionada
+            $seleccionable = false; // El select será no editable
+        } else {
+            abort(403, 'No tienes permisos para realizar esta acción.'); // Control de acceso
+        }
+
         $sections = [
             '1. Seguridad y Salud' => [
                 '¿Existe señalización de advertencia, prohibición, obligación, de lucha contra incendios y áreas restringidas?',
@@ -121,7 +136,10 @@ class InspeccionController extends Controller
                 '¿Se realiza la inspección de vehículos periódica, previo al uso de vehículos?',
             ],
         ];
-        return view('formatos.inspecciones.create', compact('empresas', 'users', 'sections'));
+
+        $empresaSeleccionada = $user->hasRole('Admin Empresa') ? $user->empresa_id : null;
+
+        return view('formatos.inspecciones.create', compact('empresas', 'sections', 'empresaSeleccionada','seleccionable'));
     }
 
 

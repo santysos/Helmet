@@ -41,6 +41,8 @@ Route::post('inspecciones_extintores_detalles/{inspeccionId}/store', [Inspeccion
 Route::get('inspecciones_extintores_detalles/{id}/show', [InspeccionExtintoresDetalleController::class, 'show'])->name('inspecciones_extintores_detalles.show');
 Route::get('inspecciones_extintores_detalles/{id}/edit', [InspeccionExtintoresDetalleController::class, 'edit'])->name('inspecciones_extintores_detalles.edit');
 Route::get('inspecciones_extintores_detalles/{extintor_id}/{inspeccion_id}/edit', [InspeccionExtintoresDetalleController::class, 'edit'])->name('inspecciones_extintores_detalles.edit');
+Route::delete('inspecciones_extintores_detalles/{extintor_id}/{inspeccion_id}', [InspeccionExtintoresDetalleController::class, 'destroy'])->name('inspecciones_extintores_detalles.destroy');
+
 
 Route::put('inspecciones_extintores_detalles/{id}', [InspeccionExtintoresDetalleController::class, 'update'])->name('inspecciones_extintores_detalles.update');
 Route::delete('inspecciones_extintores_detalles/{id}', [InspeccionExtintoresDetalleController::class, 'destroy'])->name('inspecciones_extintores_detalles.destroy');
@@ -89,5 +91,8 @@ Route::prefix('sistema-gestion')->group(function () {
     Route::post('/upload', [DocumentController::class, 'uploadDocument'])->name('sistema-gestion.upload');
     Route::delete('/eliminar-documento/{document}',[DocumentController::class, 'destroy'])->name('eliminar_documento');
     Route::put('/editar-nombre-documento/{document}', [DocumentController::class, 'update'])->name('editar_nombre_documento');
+
+    Route::get('/{category}/{folder}', [DocumentController::class, 'index'])
+    ->name('{category}.{folder}.index');
 
 });

@@ -16,15 +16,27 @@ class DocumentController extends Controller
         $user = Auth::user();
         $empresas = Empresa::all();
 
-        // Si el usuario tiene empresa_id 0, mostrar todos los documentos
-        if ($user->empresa_id == 0) {
-            $documents = Document::where('file_path', 'LIKE', "%$category/$folder%")->get();
-        } else {
-            // Si el usuario tiene un empresa_id específico, mostrar solo los documentos de su empresa
-            $documents = Document::where('empresa_id', $user->empresa_id)
-                ->where('file_path', 'LIKE', "%$category/$folder%")
-                ->get();
+        // Consulta base filtrada solo por 'folder'
+        $query = Document::where('file_path', 'LIKE', "%$folder%");
+
+        // Si el usuario tiene 'empresa_id' distinto de 0, filtra solo los documentos de esa empresa
+        if ($user->empresa_id != 0) {
+            $query->where('empresa_id', $user->empresa_id);
         }
+
+        // Si hay un término de búsqueda, filtramos los documentos por 'file_path' o por el nombre de la empresa
+        if ($search = request('search')) {
+            // Buscar en el 'file_path' o en el 'nombre' de la empresa
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('file_path', 'like', "%$search%")
+                    ->orWhereHas('empresa', function ($query) use ($search) {
+                        $query->where('nombre', 'like', "%$search%");
+                    });
+            });
+        }
+
+        // Paginamos los resultados (10 por página, por ejemplo)
+        $documents = $query->paginate(10); // Cambia el número 10 por el número de elementos que quieras por página
 
         return view('documents.index', compact('documents', 'category', 'folder', 'empresas'));
     }

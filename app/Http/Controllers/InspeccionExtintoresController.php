@@ -17,9 +17,23 @@ use Illuminate\Support\Facades\Log;
 
 class InspeccionExtintoresController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $inspecciones = InspeccionExtintores::with('empresa')->orderBy('id', 'desc')->get();
+        $search = $request->input('search');
+
+        $inspecciones = InspeccionExtintores::with('empresa', 'extintores')
+            ->when($search, function ($query, $search) {
+                return $query->where('id', 'like', "%$search%")
+                    ->orWhere('area', 'like', "%$search%")
+                    ->orWhere('responsable_inspeccion', 'like', "%$search%")
+                    ->orWhere('departamento', 'like', "%$search%")
+                    ->orWhereHas('empresa', function ($query) use ($search) {
+                        $query->where('nombre', 'like', "%$search%"); // Cambia 'nombre' por el campo correcto en la tabla de empresas
+                    });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
         return view('formatos.inspecciones_extintores.index', compact('inspecciones'));
     }
 
@@ -51,7 +65,25 @@ class InspeccionExtintoresController extends Controller
     {
         $empresas = Empresa::all();
         $extintores = Extintor::all();
-        return view('formatos.inspecciones_extintores.create', compact('empresas', 'extintores'));
+
+        $user = auth()->user();
+
+        // Si el usuario tiene el rol SuperAdmin o Admin Helmet
+        if ($user->hasRole(['SuperAdmin', 'Admin Helmet'])) {
+            $empresas = Empresa::all(); // Cargar todas las empresas
+            $empresaSeleccionada = null; // No preseleccionada
+            $seleccionable = true; // El select será editable
+        }
+        // Si el usuario tiene el rol Admin Empresa
+        elseif ($user->hasRole('Admin Empresa')) {
+            $empresas = Empresa::where('id', $user->empresa_id)->get(); // Solo su empresa
+            $empresaSeleccionada = $user->empresa_id; // Empresa preseleccionada
+            $seleccionable = false; // El select será no editable
+        } else {
+            abort(403, 'No tienes permisos para realizar esta acción.'); // Control de acceso
+        }
+
+        return view('formatos.inspecciones_extintores.create', compact('empresas', 'extintores', 'empresaSeleccionada', 'seleccionable'));
     }
 
     public function store(Request $request)
@@ -149,8 +181,8 @@ class InspeccionExtintoresController extends Controller
         $empresas = Empresa::all();
 
         // Los extintores ya estarán cargados en la relación
-       // $extintores = InspeccionExtintoresDetalle::with(['extintor_id'])->where('inspeccion_extintor_id','=',$id)->get();
-       $extintores = $inspeccion->detalles->pluck('extintor')->unique('id');
+        // $extintores = InspeccionExtintoresDetalle::with(['extintor_id'])->where('inspeccion_extintor_id','=',$id)->get();
+        $extintores = $inspeccion->detalles->pluck('extintor')->unique('id');
 
 
 

@@ -8,82 +8,74 @@
 
 @section('content')
 <div class="card col-md-10">
-    <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3 class="card-title">Listado de Documentos</h3>
-            @can('subir.pdfs')
-            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#uploadModal">
-                Subir Nuevo PDF
-            </button>
-            @endcan
-        </div>
+<div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="card-title">Listado de Documentos</h3>
+        <form action="{{ route('{category}.' . $folder . '.index', ['category' => $category, 'folder' => $folder]) }}" method="GET" class="form-inline">
+            <div class="input-group input-group-sm">
+                <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-info btn-flat">Buscar</button>
+                </span>
+            </div>
+        </form>
+        @can('subir.pdfs')
+        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#uploadModal">
+            Subir Nuevo PDF
+        </button>
+        @endcan
     </div>
-    <div class="card-body">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Empresa</th>
-                    <th>Archivo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($documents as $document)
-                <tr>
-                    <td>{{ $document->id }}</td>
-                    <td>{{ $document->empresa->nombre}}</td>
-                    <td>
-                        <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">{{ basename($document->file_path) }}</a>
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Acciones">
-                            <a href="{{ asset('storage/' . $document->file_path) }}" class="btn btn-sm btn-success" title="Descargar" download>
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editFileNameModal{{ $document->id }}" title="Editar nombre">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <form action="{{ route('eliminar_documento', $document->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este archivo?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+</div>
 
-        @foreach ($documents as $document)
-        <div class="modal fade" id="editFileNameModal{{ $document->id }}" tabindex="-1" aria-labelledby="editFileNameModalLabel{{ $document->id }}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editFileNameModalLabel{{ $document->id }}">Editar Nombre de Archivo</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+<div class="card-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Archivo</th>
+                <th>Fecha de Carga</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($documents as $document)
+            <tr>
+                <td>{{ $document->id }}</td>
+                <td>{{ $document->empresa->nombre }}</td>
+                <td>
+                    <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">{{ basename($document->file_path) }}</a>
+                </td>
+                <td>
+                {{ $document->created_at }}
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Acciones">
+                        <a href="{{ asset('storage/' . $document->file_path) }}" class="btn btn-sm btn-success" title="Descargar" download>
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editFileNameModal{{ $document->id }}" title="Editar nombre">
+                            <i class="fas fa-edit"></i>
                         </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('editar_nombre_documento', $document->id) }}" method="POST">
+                        <form action="{{ route('eliminar_documento', $document->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este archivo?')">
                             @csrf
-                            @method('PUT')
-                            <div class="form-group">
-                                <label for="new_file_name">Nuevo nombre de archivo</label>
-                                <input type="text" class="form-control" name="new_file_name" placeholder="Nuevo nombre" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Editar</button>
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-center">
+        {{ $documents->links() }}
     </div>
+</div>
 </div>
 
 <!-- Modal para subir nuevo PDF -->
@@ -106,7 +98,7 @@
                         <select class="form-control" id="empresa_id" name="empresa_id" required>
                             <option value="" disabled selected>Seleccione una empresa</option>
                             @foreach($empresas as $empresa)
-                                <option value="{{ $empresa->id }}">{{ $empresa->nombre }}</option>
+                            <option value="{{ $empresa->id }}">{{ $empresa->nombre }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -21,13 +21,29 @@
                 @csrf
                 <div class="form-group">
                     <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled selected>Seleccione una empresa</option>
+                    <select
+                        class="form-control"
+                        id="empresa_id"
+                        name="empresa_id"
+                        required
+                        {{ !$seleccionable ? 'disabled' : '' }}> <!-- Deshabilitar si no es editable -->
+
+                        <option value="" disabled {{ !isset($empresaSeleccionada) ? 'selected' : '' }}>Seleccione una empresa</option>
+
                         @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}">{{ $empresa->nombre }}</option>
+                        <option value="{{ $empresa->id }}"
+                            {{ (old('empresa_id') == $empresa->id || (isset($empresaSeleccionada) && $empresaSeleccionada == $empresa->id)) ? 'selected' : '' }}>
+                            {{ $empresa->nombre }}
+                        </option>
                         @endforeach
                     </select>
+
+                    @if(!$seleccionable)
+                    <!-- Campo oculto para enviar el valor si el select está deshabilitado -->
+                    <input type="hidden" name="empresa_id" value="{{ $empresaSeleccionada }}">
+                    @endif
                 </div>
+
                 <div class="form-group">
                     <input type="hidden" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
                 </div>
@@ -149,7 +165,38 @@
 @endif
 
 <script>
-    // JavaScript para cargar dinámicamente los nombres de seguimiento basados en la empresa seleccionada
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verifica si el usuario tiene el rol de Admin Empresa
+        var userRole = '{{ auth()->user()->getRoleNames()->first() }}'; // Obtén el primer rol del usuario
+        var empresaId = '{{ auth()->user()->empresa_id }}'; // ID de la empresa del usuario
+        var followUpNameSelect = document.getElementById('follow_up_name');
+
+        if (userRole === 'Admin Empresa') {
+            // Generar la URL de la API usando el nombre de la ruta de Laravel
+            var apiUrl = `{{ url('/api/empresas') }}/${empresaId}/usuarios`;
+
+            // Hacer una solicitud AJAX para obtener los usuarios de la empresa
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    followUpNameSelect.innerHTML = '<option value="" disabled>Seleccione uno o varios usuarios</option>';
+                    data.forEach(function(user) {
+                        var option = document.createElement('option');
+                        option.value = user.id; // Asegúrate de que `id` sea la propiedad correcta
+                        option.textContent = user.name; // Asegúrate de que `name` sea la propiedad correcta
+                        followUpNameSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    // Sigue funcionando para el evento "change"
     document.getElementById('empresa_id').addEventListener('change', function() {
         var empresaId = this.value;
 
@@ -178,6 +225,7 @@
             .catch(error => console.error('Error:', error));
     });
 </script>
+
 
 
 @stop

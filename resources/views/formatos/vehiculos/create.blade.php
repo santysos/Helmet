@@ -23,21 +23,27 @@
             <div class="form-group row">
                 <div class="col-md-4">
                     <label for="empresa_id">Empresa</label>
-                    <select class="form-control" id="empresa_id" name="empresa_id" required>
-                        <option value="" disabled selected>Seleccione una empresa</option>
+                    <select class="form-control" id="empresa_id" name="empresa_id" required {{ $seleccionable ? '' : 'disabled' }}>
+                        <option value="" disabled {{ !$empresaSeleccionada ? 'selected' : '' }}>Seleccione una empresa</option>
                         @foreach($empresas as $empresa)
-                        <option value="{{ $empresa->id }}" {{ old('empresa_id') == $empresa->id ? 'selected' : '' }}>{{ $empresa->nombre }}</option>
+                        <option value="{{ $empresa->id }}"
+                            {{ old('empresa_id', $empresaSeleccionada) == $empresa->id ? 'selected' : '' }}>
+                            {{ $empresa->nombre }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
+
                 <div class="col-md-4">
                     <label for="user_id">Usuario</label>
-                    <select name="user_id" class="form-control" required>
+                    <select name="user_id" class="form-control" id="user_id" required>
                         @foreach($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                 </div>
+
+
                 <div class="col-md-4">
                     <label for="inspection_date">Fecha de Inspección</label>
                     <input type="date" class="form-control" id="inspection_date" name="inspection_date" value="{{ old('inspection_date') }}" required>
@@ -120,7 +126,4 @@
 </script>
 @endif
 
-<script>
-    // JavaScript para cargar dinámicamente los datos adicionales si es necesario
-</script>
 @stop

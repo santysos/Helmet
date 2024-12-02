@@ -339,11 +339,7 @@ return [
                     'icon' => 'fas fa-fw fa-chalkboard-teacher',
                     'url' => 'casi_accidente',
                 ],
-                [
-                    'text' => 'Reporte de Accidentes',
-                    'icon' => 'fas fa-fw fa-user-injured',
-                    'url' => '#',
-                ],
+               
                 [
                     'text' => 'Charlas de Seguridad',
                     'icon' => 'fas fa-fw fa-user-shield',
