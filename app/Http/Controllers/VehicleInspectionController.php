@@ -38,7 +38,7 @@ class VehicleInspectionController extends Controller
 
 
 
-        return $pdf->download('inspection_' . $id . '.pdf');
+        return $pdf->download('Inspeccion-vehicular-' . $id . '.pdf');
     }
 
 
