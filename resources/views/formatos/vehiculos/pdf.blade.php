@@ -141,7 +141,8 @@
                     <div class="image-container">
                         <h5>Imágenes de la Inspección</h5>
                         @foreach ($inspection->images as $image)
-                        <img src="{{ public_path('storage/' . $image->image_path) }}" alt="Inspección Imagen">
+                        <img src="{{ storage_path('app/public/' . $image->image_path) }}" alt="Imagen de la inspección">
+
                         @endforeach
                     </div>
                 </td>
