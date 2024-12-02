@@ -78,22 +78,22 @@
 
 <body>
     <div class="header">
-        <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
+       <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
-    
+
     <div>
         <strong>Detalles de la Inspección de Vehículo</strong>
     </div>
-    
+
     <table class="table table-sm table-bordered table-datos-empresa">
         <tbody>
             <tr>
                 <th colspan="3"> Datos del Vehículo</th>
             </tr>
             <tr>
-                <td>Conductor: {{ $inspection->driver_name }}</td>
-                <td>Placa: {{ $inspection->plate }}</td>
-                <td>Número del Vehículo: {{ $inspection->vehicle_number }}</td>
+                <td style="width: 50%;">Conductor: {{ $inspection->driver_name }}</td>
+                <td style="width: 25%;">Placa: {{ $inspection->plate }}</td>
+                <td style="width: 25%;">Número del Vehículo: {{ $inspection->vehicle_number }}</td>
             </tr>
             <tr>
                 <th><strong>Fecha de Inspección:</strong></th>
@@ -109,24 +109,44 @@
             <tr>
                 <td colspan="3">{{ $inspection->observations_general }}</td>
             </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered table-datos-empresa">
+        <tbody>
+
             <tr>
-                <th colspan="3"> Detalles de la Inspección</th>
+                <th colspan="3">Detalles de la Inspección</th>
             </tr>
+            @foreach ($inspection->details as $detail)
+            <tr>
+                <td colspan="2" style="width: 98%;">
+                    <strong>{{ $detail->question }}</strong>
+                    @if (!empty($detail->observations))
+                    <br><strong>Obs:</strong> {{ $detail->observations }}
+                    @endif
+                </td>
+
+                <td colspan="1" style="width: 2%; text-align: center; vertical-align: middle;">
+                    <span class="badge badge-{{ $detail->answer ? 'success' : 'danger' }}">
+                        {{ $detail->answer ? 'Sí' : 'No' }}
+                    </span>
+                </td>
+
+            </tr>
+
+
+            @endforeach
             <tr>
                 <td colspan="3">
-                    @foreach ($inspection->details as $detail)
-                    <div class="card">
-                        <div class="card-header">
-                            {{ $detail->question }}
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Respuesta:</strong> {{ $detail->answer ? 'Sí' : 'No' }}</p>
-                            <p><strong>Observaciones:</strong> {{ $detail->observations }}</p>
-                        </div>
+                    <div class="image-container">
+                        <h5>Imágenes de la Inspección</h5>
+                        @foreach ($inspection->images as $image)
+                        <img src="{{ public_path('storage/' . $image->image_path) }}" alt="Inspección Imagen">
+                        @endforeach
                     </div>
-                    @endforeach
                 </td>
             </tr>
+
         </tbody>
     </table>
 
