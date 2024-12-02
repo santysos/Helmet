@@ -78,11 +78,13 @@
 
 <body>
     <div class="header">
-    <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
+        <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
+    
     <div>
         <strong>Detalles de la Inspección de Vehículo</strong>
     </div>
+    
     <table class="table table-sm table-bordered table-datos-empresa">
         <tbody>
             <tr>
@@ -107,7 +109,6 @@
             <tr>
                 <td colspan="3">{{ $inspection->observations_general }}</td>
             </tr>
-
             <tr>
                 <th colspan="3"> Detalles de la Inspección</th>
             </tr>
