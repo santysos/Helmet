@@ -78,7 +78,7 @@
 
 <body>
     <div class="header">
-       <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
+        <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
 
     <div>
@@ -141,12 +141,12 @@
                     <div class="image-container">
                         <h5>Imágenes de la Inspección</h5>
                         @foreach ($inspection->images as $image)
-                        <img src="{{ storage_path('app/public/' . $image->image_path) }}" alt="Imagen de la inspección">
-
+                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Imagen de la inspección">
                         @endforeach
                     </div>
                 </td>
             </tr>
+
 
         </tbody>
     </table>
