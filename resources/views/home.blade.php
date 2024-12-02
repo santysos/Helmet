@@ -191,7 +191,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-4">
+    <div class="col-6">
 
         <div class="card card-info">
             <div class="card-header">
@@ -212,46 +212,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
 
-        <div class="card card-widget widget-user">
-
-            <div class="widget-user-header bg-info">
-                <h3 class="widget-user-username">Santiago Leiton</h3>
-                <h5 class="widget-user-desc">CEO</h5>
-            </div>
-            <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="{{ asset('images/santiago-leiton.webp') }}" alt="User Avatar">
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-sm-12 border-right">
-                        <div class="description-block">
-                            <h5 class="description-header">+1 (773) 642-5894</h5>
-                            <span class="description-text">Whatsapp</span>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm-12 border-right">
-                        <div class="description-block">
-                        <h5 class="description-header">
-    <a href="mailto:info@ergomas.ec">info@ergomas.ec</a>
-</h5>
-                            <span class="description-text">Email</span>
-                        </div>
-
-                    </div>
-
-                   
-
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-    <div class="col-4">
+    <div class="col-6">
     <div class="card card-danger">
         <div class="card-header">
             <h3 class="card-title">Casi Accidentes por Mes - {{ now()->year }}</h3>
@@ -270,6 +232,85 @@
             </div>
         </div>
     </div>
+</div>
+<div class="col-md-6">
+
+<div class="card card-widget widget-user">
+
+    <div class="widget-user-header bg-info">
+        <h3 class="widget-user-username">Santiago Leiton</h3>
+        <h5 class="widget-user-desc">CEO</h5>
+    </div>
+    <div class="widget-user-image">
+    <img class="img-circle elevation-2" src="{{ asset('images/santiago-leiton.webp') }}" alt="User Avatar">
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-sm-12 border-right">
+                <div class="description-block">
+                    <h5 class="description-header"><a href="https://api.whatsapp.com/send?phone=17736425894" target="_blank">+1 (773) 642-5894</a></h5>
+                    <span class="description-text">Whatsapp</span>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 border-right">
+                <div class="description-block">
+                <h5 class="description-header">
+<a href="mailto:ergomas.ecuador@gmail.com">ergomas.ecuador@gmail.com</a>
+</h5>
+                    <span class="description-text">Email</span>
+                </div>
+
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card card-widget widget-user">
+
+    <div class="widget-user-header bg-info">
+        <h3 class="widget-user-username">Evelyn Alvarado</h3>
+        <h5 class="widget-user-desc">Directora Administrativa</h5>
+    </div>
+    <div class="widget-user-image">
+    <img class="img-circle elevation-2" src="{{ asset('images/evelyn-alvarado.jpeg') }}" alt="User Avatar">
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-sm-12 border-right">
+                <div class="description-block">
+                    <h5 class="description-header"><a href="https://api.whatsapp.com/send?phone=13125361182" target="_blank">+1 (312) 536-1182</a></h5>
+                    <span class="description-text">Whatsapp</span>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 border-right">
+                <div class="description-block">
+                <h5 class="description-header">
+<a href="mailto:talentohumano.ergomas@gmail.com">talentohumano.ergomas@gmail.com</a>
+</h5>
+                    <span class="description-text">Email</span>
+                </div>
+
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</div>
+
 </div>
 </div>
 

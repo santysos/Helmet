@@ -17,7 +17,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="card-title">Listado de Inspecciones</h3>
             <form action="{{ route('inspecciones.index') }}" method="GET" class="form-inline">
-            <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm">
                     <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">Buscar</button>
@@ -51,6 +51,8 @@
                     <td>{{ $inspeccion->responsable_inspeccion }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones">
+                            <a href="#" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
                             <a href="{{ route('inspecciones.show', $inspeccion->id) }}" class="btn btn-sm btn-info" title="Ver">
                                 <i class="fas fa-eye"></i>
                             </a>

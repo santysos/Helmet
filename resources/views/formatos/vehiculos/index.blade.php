@@ -47,6 +47,8 @@
                     <td>{{ $inspection->inspection_date }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones">
+                        <a href="#" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
                             <a href="{{ route('vehiculos.show', $inspection->id) }}" class="btn btn-sm btn-info" title="Ver">
                                 <i class="fas fa-eye"></i>
                             </a>

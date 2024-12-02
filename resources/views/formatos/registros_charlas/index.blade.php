@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="card-title">Listado de Inspecciones</h3>
             <form action="{{ route('registros_charlas.index') }}" method="GET" class="form-inline">
-            <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm">
                     <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">Buscar</button>
@@ -44,19 +44,22 @@
                     <td>{{ $registroCharla->responsable_charla }}</td>
                     <td>{{ $registroCharla->fecha_charla }}</td>
                     <td>
-                    <a href="{{ route('registros_charlas.pdf', $registroCharla->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+                        <div class="btn-group" role="group" aria-label="Acciones">
 
-                        <a href="{{ route('registros_charlas.show', $registroCharla->id) }}" class="btn btn-sm btn-info">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                        <a href="{{ route('registros_charlas.edit', $registroCharla->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('registros_charlas.destroy', $registroCharla->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                            <a href="{{ route('registros_charlas.pdf', $registroCharla->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
+                            <a href="{{ route('registros_charlas.show', $registroCharla->id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('registros_charlas.edit', $registroCharla->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                            <form action="{{ route('registros_charlas.destroy', $registroCharla->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @endforeach

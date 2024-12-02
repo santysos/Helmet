@@ -13,6 +13,8 @@
 <div class="card">
     <div class="card-header">
         Detalles de la Charla
+        <a href="{{ route('registros_charlas.pdf', $registroCharla->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
     </div>
     <div class="card-body">
         <table class="table table-bordered">

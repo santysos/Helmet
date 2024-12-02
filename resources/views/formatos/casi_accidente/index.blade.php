@@ -15,7 +15,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="card-title">Listado de Reportes de Casi Accidentes</h3>
             <form action="{{ route('casi_accidente.index') }}" method="GET" class="form-inline">
-            <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm">
                     <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">Buscar</button>
@@ -45,6 +45,8 @@
                     <td>{{ $report->description }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones">
+                            <a href="{{ route('casi_accidente.pdf', $report->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
                             <a href="{{ route('casi_accidente.show', $report->id) }}" class="btn btn-sm btn-info" title="Ver">
                                 <i class="fas fa-eye"></i>
                             </a>
