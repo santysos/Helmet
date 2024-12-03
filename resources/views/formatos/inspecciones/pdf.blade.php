@@ -99,6 +99,8 @@
         <tbody>
             <tr>
                 <th colspan="3">Datos de la Inspección</th>
+                <td><strong># Inspección:</strong></td>
+                <td colspan="2">{{ $inspeccion->id }}</td>
             </tr>
             <tr>
                 <td><strong># Inspección:</strong></td>
