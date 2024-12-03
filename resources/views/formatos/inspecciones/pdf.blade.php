@@ -138,12 +138,12 @@
     @foreach ($sections as $sectionName => $detalles)
     <div class="section-title">{{ $sectionName }}</div>
     <table class="table table-sm table-bordered table-datos-empresa">
-       
+
         <tbody>
             @foreach ($detalles as $detalle)
             <tr>
                 <td colspan="2" style="width: 98%;">
-                    {{ $detalle->pregunta }}
+                    <strong>{{ $detalle->pregunta }}</strong>
                 </td>
 
                 <td colspan="1" style="width: 2%; text-align: center; vertical-align: middle;">
@@ -152,14 +152,16 @@
                     </span>
                 </td>
             </tr>
+            @if ($detalle->observaciones || $detalle->photo)
             <tr>
-                <td colspan="2">{{ $detalle->observaciones }}</td>
+                <td colspan="2"><strong>Obs:</strong> {{ $detalle->observaciones }}</td>
                 <td colspan="1">
                     @if ($detalle->photo)
                     <img src="{{ public_path('storage/' . $detalle->photo) }}" alt="Foto" style="width: 100px;">
                     @endif
                 </td>
             </tr>
+            @endif
             @endforeach
         </tbody>
     </table>
