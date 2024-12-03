@@ -9,6 +9,8 @@ use App\Models\Empresa;
 use App\Models\User;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 
@@ -39,6 +41,38 @@ class InspeccionController extends Controller
 
         // Devolver la vista con las inspecciones filtradas
         return view('formatos.inspecciones.index', compact('inspecciones'));
+    }
+
+    public function generarPdf($id)
+    {
+        // Cargar inspección con los detalles y relaciones
+        $inspeccion = Inspeccion::with('empresa', 'user', 'detalles')->findOrFail($id);
+
+        // Definir las secciones manualmente con slicing
+        $sections = [
+            '1. Seguridad y Salud' => $inspeccion->detalles->slice(0, 9),
+            '2. Órden y Limpieza' => $inspeccion->detalles->slice(9, 6),
+            '3. Estructuras' => $inspeccion->detalles->slice(15, 4),
+            '4. Instalaciones Eléctricas y Equipos' => $inspeccion->detalles->slice(19, 7),
+            '5. Condiciones Ambientales' => $inspeccion->detalles->slice(26, 5),
+            '6. Condiciones Sanitarias' => $inspeccion->detalles->slice(31, 6),
+            '7. Equipos de Protección' => $inspeccion->detalles->slice(37, 6),
+            '8. Herramientas' => $inspeccion->detalles->slice(43, 3),
+            '9. Máquinas' => $inspeccion->detalles->slice(46, 5),
+            '10. Vehículos' => $inspeccion->detalles->slice(51, 2),
+        ];
+
+        // Verificar que los detalles no estén vacíos
+        if ($inspeccion->detalles->isEmpty()) {
+            return back()->withErrors('No se encontraron detalles para esta inspección.');
+        }
+
+        // Generar la vista del PDF
+        $pdf = Pdf::loadView('formatos.inspecciones.pdf', compact('inspeccion', 'sections'));
+
+        // Descargar el PDF
+        $nombreArchivo = 'Inspeccion_' . $inspeccion->id . '.pdf';
+        return $pdf->download($nombreArchivo);
     }
 
 
@@ -139,7 +173,7 @@ class InspeccionController extends Controller
 
         $empresaSeleccionada = $user->hasRole('Admin Empresa') ? $user->empresa_id : null;
 
-        return view('formatos.inspecciones.create', compact('empresas', 'sections', 'empresaSeleccionada','seleccionable'));
+        return view('formatos.inspecciones.create', compact('empresas', 'sections', 'empresaSeleccionada', 'seleccionable'));
     }
 
 

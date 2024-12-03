@@ -47,9 +47,11 @@ Route::delete('inspecciones_extintores_detalles/{extintor_id}/{inspeccion_id}', 
 Route::put('inspecciones_extintores_detalles/{id}', [InspeccionExtintoresDetalleController::class, 'update'])->name('inspecciones_extintores_detalles.update');
 Route::delete('inspecciones_extintores_detalles/{id}', [InspeccionExtintoresDetalleController::class, 'destroy'])->name('inspecciones_extintores_detalles.destroy');
 
-Route::get('inspecciones_extintores/{id}/pdf', [App\Http\Controllers\InspeccionExtintoresController::class, 'generatePDF'])->name('inspecciones_extintores.pdf');
+Route::get('inspecciones_extintores/{id}/pdf', [InspeccionExtintoresController::class, 'generatePDF'])->name('inspecciones_extintores.pdf');
 
 Route::get('inspecciones/{id}/send-email', [InspeccionExtintoresController::class, 'sendInspeccionEmail'])->name('inspecciones_extintores.sendEmail');
+
+Route::get('/inspecciones/{id}/pdf', [InspeccionController::class, 'generarPdf'])->name('inspecciones.pdf');
 
 Route::get('registros_charlas/{id}/pdf', [RegistroCharlaController::class, 'downloadPDF'])->name('registros_charlas.pdf');
 

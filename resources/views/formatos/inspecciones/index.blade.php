@@ -51,7 +51,7 @@
                     <td>{{ $inspeccion->responsable_inspeccion }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones">
-                            <a href="#" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+                            <a href="{{ route('inspecciones.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
 
                             <a href="{{ route('inspecciones.show', $inspeccion->id) }}" class="btn btn-sm btn-info" title="Ver">
                                 <i class="fas fa-eye"></i>
