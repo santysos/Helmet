@@ -4,7 +4,9 @@
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Inspección Mensual</h5>
+    <h5>Inspección Mensual                             <a href="{{ route('inspecciones.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success float-right ml-2"><i class="fas fa-download"></i></a>
+    </h5>
+
     <a href="{{ route('inspecciones.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>
 </div>
 @stop

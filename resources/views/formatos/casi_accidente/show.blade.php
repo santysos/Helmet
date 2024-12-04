@@ -4,7 +4,10 @@
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Casi Accidentes</h5>
+    <h5>Casi Accidentes
+        <a href="{{ route('casi_accidente.pdf', $nearAccidentReport->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+
+    </h5>
     <a href="{{ route('casi_accidente.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>
 </div>
 @stop
@@ -12,11 +15,8 @@
 @section('content')
 
 <div class="card">
-<div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <span>Detalles del Reporte</span>
-        <a href="{{ route('casi_accidente.pdf', $nearAccidentReport->id) }}" class="btn btn-sm btn-danger">
-            <i class="fas fa-file-pdf"></i> Descargar PDF
-        </a>
     </div>
     <div class="card-body">
         <div class="form-group row">

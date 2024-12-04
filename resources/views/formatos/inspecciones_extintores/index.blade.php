@@ -12,17 +12,18 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <h3 class="card-title">Listado de Inspecciones de Extintores</h3>
             <form action="{{ route('inspecciones_extintores.index') }}" method="GET" class="form-inline">
-            <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm">
                     <input type="text" name="search" class="form-control" placeholder="Buscar..." value="{{ request('search') }}">
                     <span class="input-group-append">
                         <button type="submit" class="btn btn-info btn-flat">Buscar</button>
                     </span>
                 </div>
             </form>
-        </div>    </div>
+        </div>
+    </div>
     <div class="card-body">
         <table class="table table-hover">
             <thead>
@@ -45,7 +46,7 @@
                     <td>{{ $inspeccion->responsable_inspeccion }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Acciones">
-                        <a href="{{ route('inspecciones_extintores.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+                            <a href="{{ route('inspecciones_extintores.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
 
                             <a href="{{ route('inspecciones_extintores.show', $inspeccion->id) }}" class="btn btn-sm btn-info" title="Ver">
                                 <i class="fas fa-eye"></i>
@@ -57,7 +58,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar esta inspección?');">
-                                    <i class="fas fa-trash"></i> 
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </div>

@@ -4,7 +4,8 @@
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Detalles de la Inspección de Vehículo</h5>
+    <h5>Detalles de la Inspección de Vehículo <a href="{{ route('vehicle-inspections.pdf', $inspection->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+    </h5>
     <a href="{{ route('vehiculos.index') }}" class="btn btn-sm btn-primary">Volver al Listado</a>
 </div>
 @stop
@@ -69,11 +70,11 @@
         <h5>Imágenes de la Inspección</h5>
         <div class="row">
             @foreach ($inspection->images as $image)
-                <div class="col-md-3 mb-2">
-                    <a href="{{ asset('storage/' . $image->image_path) }}" data-lightbox="inspection-images" data-title="Inspección de Vehículo">
-                        <img src="{{ asset('storage/' . $image->image_path) }}" class="img-fluid" alt="Inspección de Vehículo" style="max-height: 150px;">
-                    </a>
-                </div>
+            <div class="col-md-3 mb-2">
+                <a href="{{ asset('storage/' . $image->image_path) }}" data-lightbox="inspection-images" data-title="Inspección de Vehículo">
+                    <img src="{{ asset('storage/' . $image->image_path) }}" class="img-fluid" alt="Inspección de Vehículo" style="max-height: 150px;">
+                </a>
+            </div>
             @endforeach
         </div>
     </div>

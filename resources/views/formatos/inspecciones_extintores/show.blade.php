@@ -9,8 +9,10 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Información de la Inspección</h3>
-        <a href="{{ route('inspecciones_extintores.pdf', $inspeccion->id) }}" target="_blank" class="btn btn-danger float-right ml-2">Generar PDF</a>
+        <h3 class="card-title">Información de la Inspección             
+        <a href="{{ route('inspecciones_extintores.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success "><i class="fas fa-download"></i></a>
+                 
+        </h3>
         <a href="{{ route('inspecciones_extintores.sendEmail', $inspeccion->id) }}" class="btn btn-primary float-right">Enviar Email</a>
     </div>
     <div class="card-body">

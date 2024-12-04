@@ -88,7 +88,7 @@
 <body>
 
     <div class="header">
-         <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
+     <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
     <table class="table table-sm table-bordered table-datos-empresa">
         <tbody>
@@ -114,7 +114,7 @@
 
     @foreach ($sections as $sectionName => $detalles)
     <div class="section-title">{{ $sectionName }}</div>
-    <table class="table table-sm table-bordered table-datos-empresa">
+    <table class="table table-sm table-bordered table-datos-empresa">  
 
         <tbody>
             @foreach ($detalles as $detalle)
