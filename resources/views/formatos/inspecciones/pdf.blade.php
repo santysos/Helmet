@@ -88,52 +88,27 @@
 <body>
 
     <div class="header">
-        {{-- <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">--}}
+         <img src="{{ asset('images/helmet-logo.webp') }}" alt="Helmet Logo">
     </div>
-
-    <div>
-        <strong>Detalles de la Inspección de Vehículo #{{ $inspeccion->id }}</strong>
-    </div>
-
     <table class="table table-sm table-bordered table-datos-empresa">
         <tbody>
             <tr>
                 <th colspan="3">Datos de la Inspección</th>
-                <td><strong># Inspección:</strong></td>
-                <td colspan="2">{{ $inspeccion->id }}</td>
+                <th colspan="1">#{{ $inspeccion->id }}</th>
             </tr>
             <tr>
-                <td><strong># Inspección:</strong></td>
-                <td colspan="2">{{ $inspeccion->id }}</td>
+                <td colspan="2"><strong>Fecha de Inspección: </strong>{{ $inspeccion->fecha_inspeccion }}</td>
+                <td colspan="1"><strong>Empresa: </strong>{{ $inspeccion->empresa->nombre }}</td>
+                <td colspan="1"><strong>Usuario: </strong>{{ $inspeccion->user->name }}</td>
             </tr>
             <tr>
-                <td><strong>Fecha de Inspección:</strong></td>
-                <td colspan="2">{{ $inspeccion->fecha_inspeccion }}</td>
+                <td colspan="2"><strong>Área: </strong>{{ $inspeccion->area }}</td>
+                <td colspan="2"><strong>Responsable del Área: </strong>{{ $inspeccion->responsable_area }}</td>
             </tr>
+
             <tr>
-                <td><strong>Empresa:</strong></td>
-                <td colspan="2">{{ $inspeccion->empresa->nombre }}</td>
-            </tr>
-            <tr>
-                <td><strong>Usuario:</strong></td>
-                <td colspan="2">{{ $inspeccion->user->name }}</td>
-            </tr>
-            <tr>
-                <td><strong>Área:</strong></td>
-                <td colspan="2">{{ $inspeccion->area }}</td>
-            </tr>
-            <tr>
-                <td><strong>Responsable del Área:</strong></td>
-                <td colspan="2">{{ $inspeccion->responsable_area }}</td>
-            </tr>
-            <tr>
-                <td><strong>Responsable de la Inspección:</strong></td>
-                <td colspan="2">{{ $inspeccion->responsable_inspeccion }}</td>
-            </tr>
-            <tr>
-                <td><strong>Departamento:</strong></td>
-                <td colspan="2">{{ $inspeccion->departamento }}</td>
-            </tr>
+                <td colspan="2"><strong>Responsable de la Inspección:</strong>{{ $inspeccion->responsable_inspeccion }}</td>
+                <td colspan="2"><strong>Departamento:</strong>{{ $inspeccion->departamento }}</td>
         </tbody>
     </table>
 
