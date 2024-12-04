@@ -10,9 +10,9 @@ use App\Models\User;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Barryvdh\DomPDF\Facade\Pdf;
-
-
-
+use App\Mail\InspeccionMensualMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class InspeccionController extends Controller
 {
@@ -42,6 +42,54 @@ class InspeccionController extends Controller
         // Devolver la vista con las inspecciones filtradas
         return view('formatos.inspecciones.index', compact('inspecciones'));
     }
+
+    public function sendInspeccionMensualEmail($id)
+    {
+        // Cargar inspección con los detalles y relaciones
+        $inspeccion = Inspeccion::with('empresa', 'user', 'detalles')->findOrFail($id);
+
+        // Definir las secciones manualmente con slicing
+        $sections = [
+            '1. Seguridad y Salud' => $inspeccion->detalles->slice(0, 9),
+            '2. Órden y Limpieza' => $inspeccion->detalles->slice(9, 6),
+            '3. Estructuras' => $inspeccion->detalles->slice(15, 4),
+            '4. Instalaciones Eléctricas y Equipos' => $inspeccion->detalles->slice(19, 7),
+            '5. Condiciones Ambientales' => $inspeccion->detalles->slice(26, 5),
+            '6. Condiciones Sanitarias' => $inspeccion->detalles->slice(31, 6),
+            '7. Equipos de Protección' => $inspeccion->detalles->slice(37, 6),
+            '8. Herramientas' => $inspeccion->detalles->slice(43, 3),
+            '9. Máquinas' => $inspeccion->detalles->slice(46, 5),
+            '10. Vehículos' => $inspeccion->detalles->slice(51, 2),
+        ];
+
+        // Verificar que los detalles no estén vacíos
+        if ($inspeccion->detalles->isEmpty()) {
+            return back()->withErrors('No se encontraron detalles para esta inspección.');
+        }
+
+        // Generar el PDF y guardar en el almacenamiento temporal
+        $pdf = Pdf::loadView('formatos.inspecciones.pdf', compact('inspeccion', 'sections'));
+        $pdfPath = storage_path('app/public/inspeccion_' . $inspeccion->id . '.pdf');
+        $pdf->save($pdfPath);
+
+        // Configurar el correo electrónico y enviar
+        try {
+            Mail::to('recipient@example.com') // Cambia por el correo real del destinatario
+                ->send(new InspeccionMensualMail($inspeccion, $pdfPath));
+        } catch (\Exception $e) {
+            return back()->withErrors('Error al enviar el correo: ' . $e->getMessage());
+        }
+
+        // Eliminar el archivo PDF después de enviar el correo
+        if (file_exists($pdfPath)) {
+            unlink($pdfPath);
+        }
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('inspecciones.show', $id)
+            ->with('success', 'El reporte de inspección mensual se ha enviado por correo exitosamente.');
+    }
+
 
     public function generarPdf($id)
     {

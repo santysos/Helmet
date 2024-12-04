@@ -4,7 +4,9 @@
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Inspección Mensual                             <a href="{{ route('inspecciones.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success float-right ml-2"><i class="fas fa-download"></i></a>
+    <h5>Inspección Mensual <a href="{{ route('inspecciones.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success float-right ml-2"><i class="fas fa-download"></i></a>
+        <a href="{{ route('inspecciones.sendMensualEmail', $inspeccion->id) }}" class="btn btn-sm btn-warning float-right ml-2"><i class="fas fa-envelope"></i></a>
+
     </h5>
 
     <a href="{{ route('inspecciones.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>
@@ -15,6 +17,9 @@
 <div class="card">
     <div class="card-header">
         Detalles de la Inspección
+        <a href="{{ route('inspecciones.pdf', $inspeccion->id) }}" class="btn btn-sm btn-success float-right ml-2"><i class="fas fa-download"></i></a>
+        <a href="{{ route('inspecciones.sendMensualEmail', $inspeccion->id) }}" class="btn btn-sm btn-warning float-right ml-2"><i class="fas fa-envelope"></i></a>
+
     </div>
     <div class="card-body">
         <table class="table table-sm table-hover">
@@ -89,7 +94,7 @@
                                     <img src="{{ asset('storage/' . $detalle->photo) }}" alt="Foto" class="img-thumbnail" width="150">
                                 </a>
                                 @else
-                                
+
                                 @endif
                             </td>
                         </tr>
@@ -98,10 +103,10 @@
                 </table>
             </div>
         </div>
-    @endforeach
+        @endforeach
 
-    <a href="{{ route('inspecciones.index') }}" class="btn btn-secondary float-right">Volver</a>
-</div>
+        <a href="{{ route('inspecciones.index') }}" class="btn btn-secondary float-right">Volver</a>
+    </div>
 </div>
 @stop
 

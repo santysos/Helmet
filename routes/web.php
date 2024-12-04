@@ -50,6 +50,7 @@ Route::delete('inspecciones_extintores_detalles/{id}', [InspeccionExtintoresDeta
 Route::get('inspecciones_extintores/{id}/pdf', [InspeccionExtintoresController::class, 'generatePDF'])->name('inspecciones_extintores.pdf');
 
 Route::get('inspecciones/{id}/send-email', [InspeccionExtintoresController::class, 'sendInspeccionEmail'])->name('inspecciones_extintores.sendEmail');
+Route::get('inspecciones/{id}/send-mensual-email', [InspeccionController::class, 'sendInspeccionMensualEmail'])->name('inspecciones.sendMensualEmail');
 
 Route::get('/inspecciones/{id}/pdf', [InspeccionController::class, 'generarPdf'])->name('inspecciones.pdf');
 

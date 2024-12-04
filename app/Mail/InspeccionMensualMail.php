@@ -5,9 +5,8 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InspeccionExtintoresMail extends Mailable
+class InspeccionMensualMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -17,7 +16,8 @@ class InspeccionExtintoresMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $inspeccion
+     * @param $pdfPath
      */
     public function __construct($inspeccion, $pdfPath)
     {
@@ -32,10 +32,10 @@ class InspeccionExtintoresMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Nueva Inspección de Extintores Realizada en su empresa')
-                    ->markdown('emails.inspeccion_extintores')
+        return $this->subject('Reporte de Inspección Mensual')
+                    ->markdown('emails.inspeccion_mensual')
                     ->attach($this->pdfPath, [
-                        'as' => 'inspeccion.pdf',
+                        'as' => 'inspeccion_mensual.pdf',
                         'mime' => 'application/pdf',
                     ]);
     }
