@@ -6,6 +6,7 @@
 <div class="d-flex justify-content-between align-items-center">
     <h5>Detalles de la Charla</h5>
     <a href="{{ route('registros_charlas.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>
+
 </div>
 @stop
 
@@ -14,6 +15,7 @@
     <div class="card-header">
         Detalles de la Charla
         <a href="{{ route('registros_charlas.pdf', $registroCharla->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+        <a href="{{ route('charlas.sendEmail', $registroCharla->id) }}" class="btn btn-sm btn-warning float-right ml-2"><i class="fas fa-envelope"></i></a>
 
     </div>
     <div class="card-body">
@@ -46,9 +48,9 @@
                 <th>Tema Brindado</th>
                 <td>
                     @foreach(json_decode($registroCharla->tema_brindado, true) as $temaId)
-                        @if(isset($temas[$temaId]))
-                            <span class="badge badge-info">{{ $temas[$temaId] }}</span>
-                        @endif
+                    @if(isset($temas[$temaId]))
+                    <span class="badge badge-info">{{ $temas[$temaId] }}</span>
+                    @endif
                     @endforeach
                 </td>
                 <th>Temas Discutidos o Notas</th>
@@ -58,13 +60,13 @@
                 <th>Fotos</th>
                 <td>
                     @if ($registroCharla->fotos)
-                        @foreach(json_decode($registroCharla->fotos) as $foto)
-                            <a href="{{ asset('storage/' . $foto) }}" data-lightbox="photos">
-                                <img src="{{ asset('storage/' . $foto) }}" alt="Foto" class="img-thumbnail" width="150">
-                            </a>
-                        @endforeach
+                    @foreach(json_decode($registroCharla->fotos) as $foto)
+                    <a href="{{ asset('storage/' . $foto) }}" data-lightbox="photos">
+                        <img src="{{ asset('storage/' . $foto) }}" alt="Foto" class="img-thumbnail" width="150">
+                    </a>
+                    @endforeach
                     @else
-                        No hay fotos
+                    No hay fotos
                     @endif
                 </td>
             </tr>

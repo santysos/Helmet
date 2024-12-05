@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\Document;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ReporteCharlasSeguridadMail;
+use Illuminate\Support\Facades\Mail;
 
 class RegistroCharlaController extends Controller
 {
@@ -31,6 +33,26 @@ class RegistroCharlaController extends Controller
         $registrosCharlas = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('formatos.registros_charlas.index', compact('registrosCharlas'));
+    }
+
+    public function sendReporteEmail($id)
+    {
+        // Obtener la charla de seguridad con los detalles necesarios
+        $registroCharla = RegistroCharla::with(['trabajadores'])->findOrFail($id);
+
+        // Generar el PDF con los detalles de la charla
+        $pdf = PDF::loadView('formatos.registros_charlas.pdf', compact('registroCharla'));
+
+        // Guardar el PDF temporalmente en el sistema de archivos
+        $pdfPath = storage_path('app/public/reporte_charla_' . $registroCharla->id . '.pdf');
+        $pdf->save($pdfPath);
+
+        // Enviar el correo con el PDF adjunto
+        Mail::to('recipient@example.com') // Cambia a la dirección del destinatario
+            ->send(new ReporteCharlasSeguridadMail($registroCharla, $pdfPath));
+
+        // Redirigir al usuario con un mensaje de éxito
+        return redirect()->route('registros_charlas.index')->with('success', 'Correo enviado exitosamente');
     }
 
 

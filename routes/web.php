@@ -53,6 +53,7 @@ Route::get('inspecciones_extintores/{id}/pdf', [InspeccionExtintoresController::
 Route::get('inspecciones/{id}/send-email', [InspeccionExtintoresController::class, 'sendInspeccionEmail'])->name('inspecciones_extintores.sendEmail');
 Route::get('inspecciones/{id}/send-mensual-email', [InspeccionController::class, 'sendInspeccionMensualEmail'])->name('inspecciones.sendMensualEmail');
 Route::get('/vehiculos/{id}/enviar-reporte', [VehicleInspectionController::class, 'sendVehicleInspectionEmail'])->name('inspeccion_vehicular.sendEmail');
+Route::get('/charlas/{id}/enviar-reporte', [RegistroCharlaController::class, 'sendReporteEmail'])->name('charlas.sendEmail');
 
 
 

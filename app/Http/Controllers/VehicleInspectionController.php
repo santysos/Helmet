@@ -8,7 +8,6 @@ use App\Models\VehicleInspectionDetail;
 use App\Models\Empresa;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Mail\InspectionVehicleReportMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\VehicleInspectionImage;
 use App\Mail\InspeccionVehiculosMail;
