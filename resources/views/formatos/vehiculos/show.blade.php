@@ -4,7 +4,10 @@
 
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
-    <h5>Detalles de la Inspección de Vehículo <a href="{{ route('vehicle-inspections.pdf', $inspection->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+    <h5>Detalles de la Inspección de Vehículo 
+        <a href="{{ route('vehicle-inspections.pdf', $inspection->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+        <a href="{{ route('inspeccion_vehicular.sendEmail', $inspection->id) }}" class="btn btn-sm btn-warning float-right ml-2"> <i class="fas fa-envelope"></i></a>
+
     </h5>
     <a href="{{ route('vehiculos.index') }}" class="btn btn-sm btn-primary">Volver al Listado</a>
 </div>

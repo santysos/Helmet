@@ -11,6 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\InspectionVehicleReportMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\VehicleInspectionImage;
+use App\Mail\InspeccionVehiculosMail;
+
 
 
 class VehicleInspectionController extends Controller
@@ -29,6 +31,28 @@ class VehicleInspectionController extends Controller
 
         return view('formatos.vehiculos.index', compact('inspections'));
     }
+
+
+    public function sendVehicleInspectionEmail($id)
+    {
+        // Obtener la inspección con los detalles relacionados
+        $inspection = VehicleInspection::with(['details'])->findOrFail($id);
+
+        // Obtener las imágenes relacionadas desde la tabla VehicleInspectionImage
+        $images = VehicleInspectionImage::where('vehicle_inspection_id', $id)->get();
+
+        // Generar el PDF y pasar las imágenes a la vista
+        $pdf = PDF::loadView('formatos.vehiculos.pdf', compact('inspection', 'images'));
+        $pdfPath = storage_path('app/public/vehicle_inspection_' . $inspection->id . '.pdf');
+        $pdf->save($pdfPath);
+
+        // Enviar el correo con el PDF adjunto
+        Mail::to('recipient@example.com') // Cambia a la dirección de correo correspondiente
+            ->send(new InspeccionVehiculosMail($inspection, $pdfPath));
+
+        return redirect()->route('vehiculos.index')->with('success', 'Correo enviado exitosamente');
+    }
+
 
 
     public function generatePdf($id)
@@ -53,7 +77,6 @@ class VehicleInspectionController extends Controller
             $empresaSeleccionada = null; // No preseleccionada
             $seleccionable = true; // El select será editable
             $users = User::all();
-
         }
         // Si el usuario tiene el rol Admin Empresa
         elseif ($user->hasRole('Admin Empresa')) {
@@ -95,7 +118,7 @@ class VehicleInspectionController extends Controller
             '¿Se hace un mantenimiento y limpieza periódico de las luces?',
         ];
 
-        return view('formatos.vehiculos.create', compact('user','users', 'empresas', 'empresaSeleccionada', 'seleccionable', 'questions'));
+        return view('formatos.vehiculos.create', compact('user', 'users', 'empresas', 'empresaSeleccionada', 'seleccionable', 'questions'));
     }
 
     public function store(Request $request)
