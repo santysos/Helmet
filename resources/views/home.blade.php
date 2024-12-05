@@ -3,8 +3,22 @@
 @section('title', 'Panel de Control')
 
 @section('content_header')
-<h5>Panel de Control</h5>
+<div class="d-flex justify-content-between align-items-center">
+    <h5>Panel de Control</h5>
+    <div class="form-group mb-0">
+        <label for="empresaSelect" class="sr-only">Seleccionar Empresa</label>
+        <select id="empresaSelect" class="form-control" onchange="filtrarPorEmpresa()">
+    <option value="">Todas las empresas</option>
+    @foreach ($empresas as $empresa)
+        <option value="{{ $empresa->id }}" {{ $empresaIdSeleccionada == $empresa->id ? 'selected' : '' }}>
+            {{ $empresa->nombre }}
+        </option>
+    @endforeach
+</select>
+    </div>
+</div>
 @stop
+
 
 @section('content')
 
@@ -324,7 +338,12 @@
 @stop
 @section('js')
 <script>
-    console.log("Hi, I'm using the Laravel-AdminLTE package!");
+    function filtrarPorEmpresa() {
+        const empresaId = document.getElementById('empresaSelect').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('empresa_id', empresaId);
+        window.location.href = url.toString();
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
