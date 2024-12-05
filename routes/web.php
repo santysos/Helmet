@@ -41,7 +41,6 @@ Route::post('inspecciones_extintores_detalles/{inspeccionId}/store', [Inspeccion
 
 Route::get('inspecciones_extintores_detalles/{id}/show', [InspeccionExtintoresDetalleController::class, 'show'])->name('inspecciones_extintores_detalles.show');
 Route::get('inspecciones_extintores_detalles/{id}/edit', [InspeccionExtintoresDetalleController::class, 'edit'])->name('inspecciones_extintores_detalles.edit');
-Route::get('inspecciones_extintores_detalles/{extintor_id}/{inspeccion_id}/edit', [InspeccionExtintoresDetalleController::class, 'edit'])->name('inspecciones_extintores_detalles.edit');
 Route::delete('inspecciones_extintores_detalles/{extintor_id}/{inspeccion_id}', [InspeccionExtintoresDetalleController::class, 'destroy'])->name('inspecciones_extintores_detalles.destroy');
 
 

@@ -51,12 +51,12 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="comentarios_notas_adicionales">Comentarios y Notas Adicionales</label>
-                <textarea class="form-control" id="comentarios_notas_adicionales" name="comentarios_notas_adicionales">{{ old('comentarios_notas_adicionales', $inspeccion->comentarios_notas_adicionales) }}</textarea>
+                <label for="comentarios">Comentarios y Notas Adicionales</label>
+                <textarea class="form-control" id="comentarios" name="comentarios">{{ old('comentarios', $inspeccion->comentarios) }}</textarea>
             </div>
             <div class="form-group">
-                <label for="riesgos_significativos_recomendaciones">Riegos Significativos y Recomendaciones Técnicas en el Área</label>
-                <textarea class="form-control" id="riesgos_significativos_recomendaciones" name="riesgos_significativos_recomendaciones">{{ old('riesgos_significativos_recomendaciones', $inspeccion->riesgos_significativos_recomendaciones) }}</textarea>
+                <label for="riesgos_recomendaciones">Riegos Significativos y Recomendaciones Técnicas en el Área</label>
+                <textarea class="form-control" id="riesgos_recomendaciones" name="riesgos_recomendaciones">{{ old('riesgos_recomendaciones', $inspeccion->riesgos_recomendaciones) }}</textarea>
             </div>
             <div class="form-group">
                 <label for="extintores">Extintores</label>
@@ -64,26 +64,19 @@
                     <thead>
                         <tr>
                             <th>Extintor</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($extintores as $extintor)
                         <tr>
-                            <td>{{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}</td>
                             <td>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                {{ $extintor->codigo }} - {{ $extintor->tipo }} - {{ $extintor->peso }} - {{ $extintor->area }}
                             </td>
-
-
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
 
             <button type="submit" class="btn btn-success float-right">Guardar</button>

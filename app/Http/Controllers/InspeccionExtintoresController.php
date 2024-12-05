@@ -194,7 +194,6 @@ class InspeccionExtintoresController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validación de los datos de entrada
         $data = $request->validate([
             'empresa_id' => 'required|exists:empresas,id',
             'area' => 'required|string|max:255',
@@ -203,9 +202,10 @@ class InspeccionExtintoresController extends Controller
             'departamento' => 'required|string|max:255',
             'comentarios' => 'nullable|string',
             'riesgos_recomendaciones' => 'nullable|string',
-            'extintores' => 'array|required', // Validar que al menos un extintor sea seleccionado
-            'extintores.*' => 'exists:extintores,id', // Validar que los extintores existan
+            'extintores' => 'nullable|array', // Cambiado a nullable
+            'extintores.*' => 'nullable|exists:extintores,id', // Cambiado a nullable
         ]);
+        
 
         // Convertir la fecha al formato correcto
         $data['fecha_inspeccion'] = Carbon::parse($data['fecha_inspeccion'])->format('Y-m-d');
@@ -215,7 +215,7 @@ class InspeccionExtintoresController extends Controller
         $inspeccion->update($data);
 
         // Actualizar los extintores asociados
-        $inspeccion->extintores()->sync($data['extintores']);
+      
 
         return redirect()->route('inspecciones_extintores.show', $inspeccion->id)->with('success', 'Inspección actualizada exitosamente.');
     }
