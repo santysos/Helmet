@@ -6,6 +6,7 @@
 <div class="d-flex justify-content-between align-items-center">
     <h5>Casi Accidentes
         <a href="{{ route('casi_accidente.pdf', $nearAccidentReport->id) }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
+        <a href="{{ route('casi_accidente.enviar_correo', $nearAccidentReport->id) }}" class="btn btn-sm btn-warning float-right ml-2"><i class="fas fa-envelope"></i> Enviar Reporte por Correo</a>
 
     </h5>
     <a href="{{ route('casi_accidente.index') }}" class="btn btn-sm btn-primary">Volver al listado</a>

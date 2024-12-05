@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReporteIncidentesMail;
 
 
 class NearAccidentReportController extends Controller
@@ -31,6 +33,38 @@ class NearAccidentReportController extends Controller
     }
 
 
+
+    public function generatePdf($id)
+    {
+        $nearAccidentReport = NearAccidentReport::with(['empresa', 'user'])->findOrFail($id);
+    
+        // Generar el PDF utilizando la vista 'formatos.casi_accidente.pdf'
+        $pdf = PDF::loadView('formatos.casi_accidente.pdf', compact('nearAccidentReport'))->setPaper('a4');
+        return $pdf->download('reporte_casi_accidente_' . $id . '.pdf');
+    }
+
+    public function sendReporteIncidenteEmail($id)
+    {
+        // Obtener el reporte de incidente con los detalles relacionados
+        $nearAccidentReport = NearAccidentReport::with(['empresa', 'user'])->findOrFail($id);
+
+        // Generar el PDF y guardarlo en una ruta temporal
+        $pdf = PDF::loadView('formatos.casi_accidente.pdf', compact('nearAccidentReport'))->setPaper('a4');
+        $pdfPath = storage_path('app/public/reporte_casi_accidente_' . $nearAccidentReport->id . '.pdf');
+        $pdf->save($pdfPath);
+
+        // Obtener los correos electrónicos de los usuarios seleccionados para el seguimiento
+        $followUpEmails = json_decode($nearAccidentReport->follow_up_email, true);
+
+        // Enviar el correo con el PDF adjunto a los correos de seguimiento
+        foreach ($followUpEmails as $email) {
+            Mail::to($email)->send(new ReporteIncidentesMail($nearAccidentReport, $pdfPath));
+        }
+
+        // Redirigir al usuario con un mensaje de éxito
+        return redirect()->route('casi_accidente.index')->with('success', 'Correo enviado con éxito');
+    }
+    
     public function create()
     {
         $empresas = Empresa::where('id', '!=', 0)->get();
@@ -144,15 +178,6 @@ class NearAccidentReportController extends Controller
     }
 
 
-
-    public function generatePdf($id)
-    {
-        $nearAccidentReport = NearAccidentReport::with(['empresa', 'user'])->findOrFail($id);
-    
-        // Generar el PDF utilizando la vista 'formatos.casi_accidente.pdf'
-        $pdf = PDF::loadView('formatos.casi_accidente.pdf', compact('nearAccidentReport'))->setPaper('a4');
-        return $pdf->download('reporte_casi_accidente_' . $id . '.pdf');
-    }
     
     public function edit($id)
     {

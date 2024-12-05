@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\RegistroCharla;
 use App\Models\Empresa;
 use App\Models\Trabajador;
